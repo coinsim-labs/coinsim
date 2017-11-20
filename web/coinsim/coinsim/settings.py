@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'webui',
+    'api'
 ]
 
 MIDDLEWARE = [
@@ -77,7 +80,7 @@ if 'DB_NAME' in os.environ:
     # Running the Docker image
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'ENGINE': 'django.db.backends.postgresql',
             'NAME': os.environ['DB_NAME'],
             'USER': os.environ['DB_USER'],
             'PASSWORD': os.environ['DB_PASS'],
@@ -143,6 +146,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = './static/'
-STATIC_ROOT = './static/'
-ADMIN_MEDIA_PREFIX = './static/admin/'
+STATIC_URL = '/static/'
+STATIC_ROOT = 'static/'
+ADMIN_MEDIA_PREFIX = '/static/admin/'

@@ -9,9 +9,11 @@ web:
   env_file: env
   volumes:
     - ./web:/data/web
+    - /opt/pycharm-professional/helpers:/opt/.pycharm_helpers
   command: /data/web/docker-entrypoint.sh
-  user: $UID
-  
+
+
+
 nginx:
   restart: always
   build: ./nginx/
@@ -25,10 +27,9 @@ nginx:
 postgres:
   restart: always
   image: postgres:latest
-  volumes_from:
-    - data
   volumes:
     - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    - ./pg-data:/var/lib/postgresql/data
   env_file:
     - env
   expose:
@@ -40,9 +41,4 @@ redis:
   expose:
     - "6379"
 
-data:
-  restart: always
-  image: alpine
-  volumes:
-    - /var/lib/postgresql
-  command: "true"
+
