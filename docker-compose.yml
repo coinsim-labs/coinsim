@@ -9,7 +9,10 @@ web:
   env_file: env
   volumes:
     - ./web:/data/web
-    - /opt/pycharm-professional/helpers:/opt/.pycharm_helpers
+    - /data/web/coinsim/frontend/src/node_modules
+    - /data/web/coinsim/frontend/src/fullproject
+    - /data/web/coinsim/frontend/dist
+    
   command: /data/web/docker-entrypoint.sh
 
 
