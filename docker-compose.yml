@@ -11,11 +11,8 @@ web:
     - ./web:/data/web
     - /data/web/coinsim/frontend/src/node_modules
     - /data/web/coinsim/frontend/src/fullproject
-    - /data/web/coinsim/frontend/dist
     
   command: /data/web/docker-entrypoint.sh
-
-
 
 nginx:
   restart: always

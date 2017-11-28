@@ -27,7 +27,7 @@ RUN ln -sf /usr/bin/python3 /usr/bin/python
 # COPY . /data/web/
 
 #Setup Frontend
-RUN mkdir -p /data/web/coinsim/frontend/src
+RUN mkdir -p /data/web/coinsim/frontend/src/dist
 COPY ./coinsim/frontend/src/package.json /data/web/coinsim/frontend/src/package.json 
 COPY ./coinsim/frontend/src/.angular-cli.json /data/web/coinsim/frontend/src/.angular-cli.json
 COPY ./coinsim/frontend/src/tsconfig.json /data/web/coinsim/frontend/src/tsconfig.json
