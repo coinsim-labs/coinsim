@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from kombu import Exchange, Queue
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -157,6 +158,19 @@ STATIC_ROOT = '/public/static'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Celery settings
+
+CELERY_DEFAULT_QUEUE = 'default'
+CELERY_QUEUES = (
+    Queue('default', Exchange('default'), routing_key='default'),
+)
+
+# Sensible settings for celery
+CELERY_ALWAYS_EAGER = False
+CELERY_ACKS_LATE = True
+CELERY_TASK_PUBLISH_RETRY = True
+CELERY_DISABLE_RATE_LIMITS = False
+
+
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 
@@ -167,6 +181,6 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_BEAT_SCHEDULE = {
     'minute-exact-price': {
         'task': 'cryptocompare.tasks.minutePrice',
-        'schedule': 60.0
+        'schedule': 2.0
     }
 }
