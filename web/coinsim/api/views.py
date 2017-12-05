@@ -8,3 +8,6 @@ class CurrencyView(viewsets.ModelViewSet):
     serializer_class = CurrencySerializer
     queryset = Currency.objects.all()
 
+class PriceView(viewsets.ModelViewSet):
+    serializer_class = CurrencySerializer
+    queryset = Currency.objects.all()
