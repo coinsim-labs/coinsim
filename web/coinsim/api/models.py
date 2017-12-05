@@ -1,17 +1,20 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
-class Currency(models.Model):
-    name = models.CharField(max_length=64)
-    symbol = models.CharField(max_length=64)
-    latest_price = models.FloatField(default=0)
-    day_high = models.FloatField(default=0)
-    day_low = models.FloatField(default=0)
-    day_pct = models.FloatField(default=0)
-    market_cap = models.PositiveIntegerField(default=0)
-    coins = models.PositiveIntegerField(default=0)
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
-class Price(models.Model):
-    currency_from = models.ForeignKey(to=Currency, related_name='from')
-    currency_to = models.ForeignKey(to=Currency, related_name='to')
-    price = models.FloatField(default=0)
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
+
+class Transaction(models.Model):
+    user = models.ForeignKey(to=Profile)

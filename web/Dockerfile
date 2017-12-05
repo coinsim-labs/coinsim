@@ -28,6 +28,7 @@ COPY requirements.txt /data/web/
 RUN apk update
 RUN apk upgrade
 RUN apk add --update \
+    python2 \
 	python3 \
 	python3-dev \
 	postgresql-client \
@@ -41,7 +42,7 @@ RUN apk add --update \
 
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
-RUN ln -sf /usr/bin/python3 /usr/bin/python
+RUN ln -sf /usr/bin/python2.7 /usr/bin/python
 
 # Copy Files
 
@@ -53,6 +54,7 @@ WORKDIR /data/web/coinsim/frontend/src
 RUN yarn install
 RUN yarn build
 RUN cp -r ./dist/. /public
+RUN ln -sf /usr/bin/python3 /usr/bin/python
 
 # Set Permissions on web root to rwxr-xr-x
 
