@@ -3,3 +3,4 @@ DB_USER=coinsim
 DB_PASS=shoov3Phezaimahsh7eb2Tii4ohkah8k
 DB_SERVICE=postgres
 DB_PORT=5432
+PGDATA=/tmp
