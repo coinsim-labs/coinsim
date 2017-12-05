@@ -17,25 +17,27 @@ const APP_CONTAINERS = [
 
 // Import components
 import {
-  AppAsideComponent,
+  //AppAsideComponent,
+  //AppLinechartComponent,
   AppBreadcrumbsComponent,
-  AppFooterComponent,
+  //AppFooterComponent,
   AppHeaderComponent,
   AppSidebarComponent,
-  AppSidebarFooterComponent,
+  //AppSidebarFooterComponent,
   AppSidebarFormComponent,
   AppSidebarHeaderComponent,
   AppSidebarMinimizerComponent,
-  APP_SIDEBAR_NAV
+  APP_SIDEBAR_NAV,
 } from './components';
 
 const APP_COMPONENTS = [
-  AppAsideComponent,
+  //AppLinechartComponent,
+  //AppAsideComponent,
   AppBreadcrumbsComponent,
-  AppFooterComponent,
+  //AppFooterComponent,
   AppHeaderComponent,
   AppSidebarComponent,
-  AppSidebarFooterComponent,
+  //AppSidebarFooterComponent,
   AppSidebarFormComponent,
   AppSidebarHeaderComponent,
   AppSidebarMinimizerComponent,
@@ -63,7 +65,12 @@ import { AppRoutingModule } from './app.routing';
 // Import 3rd party components
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
-import { ChartsModule } from 'ng2-charts/ng2-charts';
+//import { ChartsModule } from 'ng2-charts/ng2-charts';
+import { ChartModule } from 'angular-highcharts';
+import { WalletComponent } from './views/wallet/wallet.component';
+import { MarketComponent } from './views/market/market.component';
+import { HistoryComponent } from './views/history/history.component';
+import { TradingComponent } from './views/trading/trading.component';
 
 @NgModule({
   imports: [
@@ -71,13 +78,13 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
     AppRoutingModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
-    ChartsModule
+     ChartModule
   ],
   declarations: [
     AppComponent,
     ...APP_CONTAINERS,
     ...APP_COMPONENTS,
-    ...APP_DIRECTIVES
+    ...APP_DIRECTIVES,
   ],
   providers: [{
     provide: LocationStrategy,
