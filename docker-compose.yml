@@ -1,44 +1,79 @@
-web:
-  restart: always
-  build: ./web/
-  expose:
-    - "8000"
-  links:
-    - postgres:postgres
-    - redis:redis
-  env_file: env
-  volumes:
-    - ./web:/data/web
-    - /data/web/coinsim/frontend/src/node_modules
-    - /data/web/coinsim/frontend/src/fullproject
-    
-  command: /data/web/docker-entrypoint.sh
+version: "3"
 
-nginx:
-  restart: always
-  build: ./nginx/
-  ports:
-    - "80:80"
-  volumes_from:
-    - web
-  links:
-    - web:web
+services:
+  web:
+    build: ./web/
+    hostname: web
+    restart: always
+    expose:
+      - "8000"
+    links:
+      - postgres
+      - redis
+      - rabbit
+    env_file: env
+    volumes:
+      - ./web/coinsim:/data/web/coinsim
+      - public:/public
+      - /data/web/coinsim/frontend/src/node_modules
+      
+    command: /data/web/docker-entrypoint.sh
+    user: "1000:1000"
 
-postgres:
-  restart: always
-  image: postgres:latest
-  volumes:
-    - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-    - ./pg-data:/var/lib/postgresql/data
-  env_file:
-    - env
-  expose:
-    - "5432"
- 
-redis:
-  restart: always
-  image: redis:latest
-  expose:
-    - "6379"
+  nginx:
+    build: ./nginx/
+    hostname: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - public:/public
+    links:
+      - web
 
+  postgres:
+    image: postgres:latest
+    restart: always
+    hostname: postgres
+    volumes:
+      - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./pg-data:/var/lib/postgresql/data
+    env_file:
+      - env
+    expose:
+      - "5432"
+  
+  rabbit:
+    image: rabbitmq:latest
+    hostname: rabbit
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=mypass
+    ports:
+      - "5672:5672" 
+      - "15672:15672"
+      
+  redis:
+    image: redis:latest
+    hostname: redis
+    restart: always
+    expose:
+      - "6379"
+   
+  worker:
+    restart: always
+    build: ./web/
+    volumes:
+      - ./web/coinsim:/data/web/coinsim
+      - ./worker:/data/worker
+    links:
+      - postgres
+      - redis
+      - rabbit
+    command: /data/worker/celery-entrypoint.sh
+    depends_on:
+      - rabbit
+      
+volumes:  
+  public:
 

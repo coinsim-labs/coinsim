@@ -153,7 +153,7 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = '/public/static'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Celery settings
