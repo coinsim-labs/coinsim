@@ -5,6 +5,8 @@
 /tmp
 *.pyc
 __pycache__
+celerybeat-schedule
+*.pid
 
 # dependencies
 node_modules

@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'frontend',
-    'api'
+    'api',
+    'cryptocompare'
 ]
 
 MIDDLEWARE = [
@@ -154,3 +155,18 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 ADMIN_MEDIA_PREFIX = '/static/admin/'
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+
+CELERY_BEAT_SCHEDULE = {
+    'minute-exact-price': {
+        'task': 'cryptocompare.tasks.minutePrice',
+        'schedule': 60.0
+    }
+}
