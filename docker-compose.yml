@@ -60,19 +60,19 @@ services:
     expose:
       - "6379"
    
-  worker:
-    restart: always
-    build: ./web/
-    volumes:
-      - ./web/coinsim:/data/web/coinsim
-      - ./worker:/data/worker
-    links:
-      - postgres
-      - redis
-      - rabbit
-    command: /data/worker/celery-entrypoint.sh
-    depends_on:
-      - rabbit
+#  worker:
+#    restart: always
+#    build: ./web/
+#    volumes:
+#      - ./web/coinsim:/data/web/coinsim
+#      - ./worker:/data/worker
+#    links:
+#      - postgres
+#      - redis
+#      - rabbit
+#    command: /data/worker/celery-entrypoint.sh
+#    depends_on:
+#      - rabbit
       
 volumes:  
   public:
