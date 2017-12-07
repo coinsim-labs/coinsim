@@ -2,7 +2,7 @@ from django.db.models import QuerySet
 from drf_openapi.utils import view_config
 from rest_framework.generics import ListAPIView
 from ..serializers import *
-from ..models import *
+
 
 
 class Balances(ListAPIView):

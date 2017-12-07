@@ -16,9 +16,6 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from rest_framework_swagger.views import get_swagger_view
-
-schema_view = get_swagger_view(title='Coinsim API')
 admin.site.site_header = 'Coinsim Administration'
 
 urlpatterns = [

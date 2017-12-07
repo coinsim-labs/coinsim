@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DRF OpenAPI Schema</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <style type="text/css">
+        .border-top {
+            display: block;
+            padding: 21px 0 8px 0;
+            margin: 41px 0 0 0;
+            border-top: dashed 1px #b6cedf;
+        }
+        .border-bottom {
+            display: block;
+            padding: 0px 0 8px 0;
+            margin: 41px 0 0 0;
+            border-top: dashed 1px #b6cedf;
+        }
+        todo {
+            margin-top: 18px;
+            display: block;
+        }
+        todo::before {
+            background: #968ec3;
+            padding: 2px 3px;
+            content: "TODO:";
+            border-radius: 4px;
+            margin-right: 6px;
+            font-weight: bold;
+            color: #ffffffbf;
+        }
+        bug {
+            margin-top: 18px;
+            display: block;
+        }
+        bug::before {
+            background: #caa76e;
+            padding: 2px 3px;
+            content: "BUG:";
+            border-radius: 4px;
+            margin-right: 6px;
+            font-weight: bold;
+            color: #ffffffbf;
+        }
+        jwt {
+            display: block;
+            margin-bottom: 17px;
+        }
+        jwt::before {
+            padding: 2px 7px;
+            content: "JWT required";
+            border-radius: 4px;
+            font-weight: bold;
+            color: #969696;
+            border: solid 1px #d1d1d1;
+        }
+        .powered-by-badge {
+            display: none !important;
+        }
+        .operation-content {
+            padding: 30px 40px 40px 40px !important;
+        }
+        .tag-info {
+            padding-bottom: 0px !important;
+        }
+        .http-verb {
+            padding: 1px 5px !important;
+        }
+        .security-definition {
+            height: 0 !important;
+            visibility: hidden;
+        }
+        .menu-item-for-heading {
+            height: 0 !important;
+        }
+        h1[section="section/Authentication"] {
+                height: 0;
+                overflow: hidden;
+                padding: 0 !important;
+        }
+        api-info h1:first-child {
+            display: none;
+        }
+        .download-openapi {
+            text-align: right;
+        }
+        h1 {
+            color: #595d64 !important;
+        }
+    </style>
+</head>
+<body>
+    <redoc spec-url='{% url 'api_schema' version=request.version %}?format=openapi'></redoc>
+    <script src="https://rebilly.github.io/ReDoc/releases/latest/redoc.min.js"> </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script type="text/javascript">
+        setTimeout(function () {
+            $.each($('.operation-header,.menu-item-title'), function(ind,item) {
+                $(item).text(
+                    $(item).text().replace(/\/api\/v(\d)\.?(\d)?\//, '')
+                )
+            });
+
+            console.log($('.operation-header,.menu-item-title'))
+
+        }, 400);
+
+
+    </script>
+</body>
+</html>
