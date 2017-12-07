@@ -13,3 +13,4 @@ u.set_password('VIlevwgfNzz!GSmBxfZrfGtOvEja1BNt')
 u.is_superuser = True
 u.is_staff = True
 u.save()
+

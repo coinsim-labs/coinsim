@@ -28,6 +28,7 @@ COPY requirements.txt /data/web/
 RUN apk update
 RUN apk upgrade
 RUN apk add --update \
+    git \
     python2 \
 	python3 \
 	python3-dev \

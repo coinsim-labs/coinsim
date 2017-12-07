@@ -15,11 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from api.views import DocView
 
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title='Coinsim API')
 admin.site.site_header = 'Coinsim Administration'
 
 urlpatterns = [
-    url(r'^api/', include('api.urls')),
+    url(r'^(?P<version>(api/v1))/', include('api.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^', include('frontend.urls')),
+
 ]

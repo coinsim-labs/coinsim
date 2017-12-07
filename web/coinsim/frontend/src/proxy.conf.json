@@ -4,6 +4,11 @@
     "secure": false,
     "logLevel": "debug"
   },
+  "/admin": {
+    "target": "http://localhost",
+    "secure": false,
+    "logLevel": "debug"
+  },
   "/static": {
     "target": "http://localhost",
     "secure": false,

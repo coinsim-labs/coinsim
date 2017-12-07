@@ -9,7 +9,9 @@ router = DefaultRouter()
 urlpatterns = [
 
     url(r'^', include(router.urls)),
-    url(r'^api-token-auth/', obtain_jwt_token),
-    url(r'^api-token-refresh/', refresh_jwt_token),
-    url(r'^api-token-verify/', verify_jwt_token),
+    url(r'^auth/signup/', views.RegisterView.as_view()),
+    url(r'^auth/login/', views.obtain_jwt_token),
+    url(r'^auth/token-refresh/', views.refresh_jwt_token),
+    url(r'^auth/token-verify/', views.verify_jwt_token),
+    url(r'^docs/',views.DocView.as_view(title='Coinsim API Docs'), name='api_schema')
 ]

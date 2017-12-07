@@ -1,4 +1,4 @@
-Django==1.11.7
+Django==1.11.1
 django-redis==4.8.0
 djangorestframework==3.7.3
 gunicorn==19.7.1
@@ -8,3 +8,4 @@ redis==2.10.6
 celery==4.1.0
 requests==2.18.4
 djangorestframework-jwt==1.11.0
+-e git://github.com/limdauto/drf_openapi.git#egg=drf_openapi
