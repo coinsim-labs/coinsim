@@ -55,7 +55,6 @@ class ObtainJSONWebToken(JSONWebTokenAPIView):
 
 class VerifyJSONWebToken(JSONWebTokenAPIView):
     """
-    <jwt></jwt>
     API View that checks the veracity of a token, returning the token if it
     is valid.
     """
@@ -64,7 +63,6 @@ class VerifyJSONWebToken(JSONWebTokenAPIView):
 
 class RefreshJSONWebToken(JSONWebTokenAPIView):
     """
-    <jwt></jwt>
     API View that returns a refreshed token (with new expiration) based on
     existing token
 
