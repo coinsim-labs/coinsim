@@ -15,7 +15,7 @@ class DocView(SchemaView):
     """<span class="border-top"></span>
     <img src="/assets/img/logodark.png" height="40" />
     <h1 _ngcontent-c6="">Coinsim REST API Docs</h1>
-    Welcome, fellow Web-Voyager. You have found the documentation for the Coinsim public REST API.<br>
+    Welcome, fellow Web-Voyager. You have found the documentation for the Coinsim public REST API. <i class="em em-tada"></i><br>
     With it you may manage your user profile, retrieve balances and transactions and trade your coins.<br><br>
     Endpoints, that are marked with <jwt style="display: inline-block;margin-bottom: 0;"></jwt> require you 
     to pass a JSON Web Token to authenticate. 
@@ -28,8 +28,11 @@ class DocView(SchemaView):
                 <td _ngcontent-c10=""> JWT {Your Token}</td>
             </tr>
         </tbody>
-    </table>
+    </table><br>
+    Happy Trading! <i class="em em-money_with_wings"></i>
     <span class="border-bottom"></span>
+    
+    
 """
 
 

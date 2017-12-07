@@ -1,7 +1,7 @@
 from rest_framework.routers import DefaultRouter, Route
 from django.conf.urls import url, include
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
-from .views.user import Balances
+from .views import *
 
 router = DefaultRouter()
 # router.register(r'currency', views.CurrencyView, base_name='currency')
