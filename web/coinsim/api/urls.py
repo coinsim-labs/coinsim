@@ -9,9 +9,13 @@ router = DefaultRouter()
 urlpatterns = [
 
     url(r'^', include(router.urls)),
+    url(r'^user/balances/', views.Balances.as_view()),
+    url(r'^user/transactions/', views.Transactions.as_view()),
+
     url(r'^auth/signup/', views.RegisterView.as_view()),
     url(r'^auth/login/', views.obtain_jwt_token),
     url(r'^auth/token-refresh/', views.refresh_jwt_token),
     url(r'^auth/token-verify/', views.verify_jwt_token),
+
     url(r'^docs/',views.DocView.as_view(title='Coinsim API Docs'), name='api_schema')
 ]

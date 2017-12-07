@@ -2,6 +2,19 @@ from rest_framework.serializers import ModelSerializer
 from .models import *
 from django.contrib.auth import get_user_model
 
+class BalanceSerializer(ModelSerializer):
+
+    class Meta:
+        model = Balance
+        exclude = ('id', 'user',)
+
+
+class TransactionSerializer(ModelSerializer):
+    class Meta:
+        model = Transaction
+        exclude = ('id', 'user',)
+
+
 class UserSerializer(ModelSerializer):
 
     class Meta:
