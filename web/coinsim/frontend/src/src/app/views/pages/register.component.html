@@ -6,19 +6,20 @@
           <div class="card-body p-4">
             <h1>Nice to meet you {{usernameValue}} :)</h1>
             <p class="text-muted">Create your account</p>
+            <form (submit)="checkRegister()">
             <div class="input-group mb-3">
               <span class="input-group-addon"><i class="icon-user"></i></span>
-              <input autofocus type="text" class="form-control" (input)="onUserNameChange($event.target.value)" placeholder="Username">
+              <input autofocus type="text" class="form-control" (input)="onUsernameChange($event.target.value)" placeholder="Username">
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-addon">@</span>
-              <input type="email" class="form-control" placeholder="Email">
+              <input type="email" class="form-control" placeholder="Email" (input)="onEmailChange($event.target.value)">
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-addon"><i class="icon-lock"></i></span>
-              <input type="password" class="form-control" placeholder="Password">
+              <input type="password" class="form-control" placeholder="Password" (input)="onPasswordChange($event.target.value)">
             </div>
 
             <div class="input-group mb-4">
@@ -26,8 +27,9 @@
               <input type="password" class="form-control" placeholder="Repeat password">
             </div>
 
-            <button type="button" class="btn btn-block btn-success">Create Account</button>
+            <button type="submit" class="btn btn-block btn-success" (click)="checkRegister()">Create Account</button>
             <button type="button" class="btn btn-block btn-cancel" (click)="navToLogin()">Cancel</button>
+          </form>
           </div>
         </div>
       </div>
