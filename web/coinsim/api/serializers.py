@@ -14,6 +14,10 @@ class TransactionSerializer(ModelSerializer):
         model = Transaction
         exclude = ('id', 'user',)
 
+class CurrencySerializer(ModelSerializer):
+    class Meta:
+        model = Currency
+        exclude = ('id', )
 
 class UserSerializer(ModelSerializer):
 

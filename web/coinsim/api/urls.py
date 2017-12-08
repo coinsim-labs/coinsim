@@ -8,14 +8,18 @@ router = DefaultRouter()
 
 urlpatterns = [
 
-    url(r'^', include(router.urls)),
-    url(r'^user/balances/', Balances.as_view()),
-    url(r'^user/transactions/', Transactions.as_view()),
-
     url(r'^auth/signup/', RegisterView.as_view()),
     url(r'^auth/login/', obtain_jwt_token),
     url(r'^auth/token-refresh/', refresh_jwt_token),
     url(r'^auth/token-verify/', verify_jwt_token),
 
-    url(r'^docs/',DocView.as_view(title='Coinsim API Docs'), name='api_schema')
+    url(r'^docs/', DocView.as_view(title='Coinsim API Docs'), name='api_schema'),
+
+    url(r'^trade/currencies/', Currencies.as_view()),
+
+    url(r'^', include(router.urls)),
+    url(r'^user/balances/', Balances.as_view()),
+    url(r'^user/transactions/', Transactions.as_view()),
+
+
 ]

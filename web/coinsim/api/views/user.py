@@ -32,7 +32,7 @@ class Transactions(ListAPIView):
     """
     serializer_class = TransactionSerializer
 
-    @view_config(response_serializer=TransactionSerializer)
+    @view_config(response_serializer=TransactionSerializer, validate_response=True)
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 

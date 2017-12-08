@@ -44,3 +44,12 @@ class Balance(models.Model):
             user = str(self.user),
             amount = self.amount,
             curr=self.currency)
+
+class Currency(models.Model):
+    name = models.CharField(max_length=64)
+    sym = models.CharField(max_length=32, unique=True)
+
+    def __str__(self):
+        return "{name} ({sym}".format(
+            name = self.name,
+            sym = self.sym)
