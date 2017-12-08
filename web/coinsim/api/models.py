@@ -20,18 +20,18 @@ def save_user_profile(sender, instance, **kwargs):
 
 class Transaction(models.Model):
     user = models.ForeignKey(to=Profile, related_name='transactions')
-    from_currency = models.CharField(max_length=32, null=False)
-    to_currency = models.CharField(max_length=32, null=False)
+    source_currency = models.CharField(max_length=32, null=False)
+    dest_currency = models.CharField(max_length=32, null=False)
     amount = models.FloatField(null=False)
-    new_balance_from = models.FloatField(null=False)
-    new_balance_to = models.FloatField(null=False)
+    new_balance_source = models.FloatField(null=False)
+    new_balance_dest = models.FloatField(null=False)
 
     def __str__(self):
         return "{user}: {amount} {fr} -> {to}".format(
             user = str(self.user),
             amount = self.amount,
-            fr=self.from_currency,
-            to=self.to_currency)
+            fr=self.source_currency,
+            to=self.dest_currency)
 
 
 class Balance(models.Model):
