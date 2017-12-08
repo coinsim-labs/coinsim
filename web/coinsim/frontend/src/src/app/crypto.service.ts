@@ -35,7 +35,8 @@ export class CryptoService {
      * @param password password for new account
      */
     register(username: string, email: string, password: string) {
-        return this.http.post('/api/v1/auth/signup/', { "username": username, "password": password, "email": email})
+        if(email != "") {
+            return this.http.post('/api/v1/auth/signup/', { "username": username, "password": password, "email": email })
             .map((response: Response) => {
                 let token = response.json() && response.json().token;
                 if (token) {
@@ -48,6 +49,22 @@ export class CryptoService {
                     return false;
                 }
             });
+        } else {
+            return this.http.post('/api/v1/auth/signup/', { "username": username, "password": password })
+            .map((response: Response) => {
+                let token = response.json() && response.json().token;
+                if (token) {
+                    this.token = token;
+                    localStorage.setItem('currentUser', JSON.stringify({username: username, token: token }));
+                    
+                    this.router.navigate(['/dashboard']);
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        }
+        
     }
 
 

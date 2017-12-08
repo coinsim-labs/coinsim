@@ -20,11 +20,6 @@ export class RegisterComponent {
     }
   }
 
-  private isValidEmail():boolean {
-    let pattern = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    return (pattern.test(this.form.email)); 
-  }
-
   private onUsernameChange(string):void {
     this.form.username = string;
   }
@@ -33,7 +28,7 @@ export class RegisterComponent {
     this.form.email = string;
   }
   
-  private onPasswordChange1(string):void {
+  private onPassword1Change(string):void {
     this.form.password1 = string;
   }
 
@@ -47,22 +42,23 @@ export class RegisterComponent {
 
 
   private checkRegister():void {
-    let validEmail = this.isValidEmail(),
-        un = this.form.username,
+    let un = this.form.username,
         em = this.form.email,
-        pw = this.form.password;
+        pw = this.form.password1,
+        pwcheck = this.form.password2;
+
+        if(pw !== pwcheck) {
+          alert("Password not the same");
+          return;
+        }
 
         this.cs.register(un,em,pw).subscribe(result => {
           if (result === true) {
               this.router.navigate(['/dashboard']);
           } else {
-              console.log('Username fjdsklfj');
+              //TODO: stuff
           }
       });
-    
-    if(validEmail) {
-
-    }
   }
 
 }
