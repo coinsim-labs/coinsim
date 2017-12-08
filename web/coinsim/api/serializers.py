@@ -8,12 +8,17 @@ class BalanceSerializer(ModelSerializer):
         model = Balance
         exclude = ('id', 'user',)
 
-
 class TransactionSerializer(ModelSerializer):
     class Meta:
         model = Transaction
         exclude = ('id', 'user',)
+        read_only_fields = ('new_balance_source', 'new_balance_dest',)
 
+
+class CurrencySerializer(ModelSerializer):
+    class Meta:
+        model = Currency
+        exclude = ('id', )
 
 class UserSerializer(ModelSerializer):
 
