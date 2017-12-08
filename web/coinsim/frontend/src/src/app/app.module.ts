@@ -1,8 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 import { AppComponent } from './app.component';
+
+import { CryptoService } from './crypto.service';
 
 // Import containers
 import {
@@ -75,10 +78,11 @@ import { TradingComponent } from './views/trading/trading.component';
 @NgModule({
   imports: [
     BrowserModule,
+    HttpModule,
     AppRoutingModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
-     ChartModule
+    ChartModule
   ],
   declarations: [
     AppComponent,
@@ -86,7 +90,9 @@ import { TradingComponent } from './views/trading/trading.component';
     ...APP_COMPONENTS,
     ...APP_DIRECTIVES,
   ],
-  providers: [{
+  providers: [
+    CryptoService,
+    {
     provide: LocationStrategy,
     useClass: HashLocationStrategy
   }],

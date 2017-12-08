@@ -1,16 +1,30 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { CryptoService } from '../../crypto.service';
+
 @Component({
-  templateUrl: 'login.component.html'
+  templateUrl: 'login.component.html',
+  providers: [CryptoService]
 })
 export class LoginComponent {
 
-  constructor(private router: Router) { }
+  private username : string;
+  private password : string;
+
+  constructor(private router: Router, private cs: CryptoService) { }
+
+  private onUsernameChange(string) {
+    this.username = string;
+  }
+
+  private onPasswordChanges(string) {
+    this.password = string;
+  }
+
 
   private checkLogin() {
-    //alert("works");
-    this.router.navigateByUrl('/dashboard');
+    this.cs.login(this.username, this.password);
   }
 
   private navToRegister() {

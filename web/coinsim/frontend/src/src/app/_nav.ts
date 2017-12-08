@@ -31,7 +31,7 @@ export const navigation = [
   },
   {
     name: 'Logout',
-    url: '/pages/login',
+    url: '/pages/logout',
     icon: 'icon-logout',
     class: 'mt-auto',
     variant: 'danger'
