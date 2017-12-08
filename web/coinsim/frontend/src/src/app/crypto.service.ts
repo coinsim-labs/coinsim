@@ -53,8 +53,8 @@ export class CryptoService {
 
     login(username: string, password: string) {
         this.logout();
-
-        return this.http.post('/api/v1/auth/signin/', {"username": username, "password": password})
+        
+        return this.http.post('/api/v1/auth/login/', {"username": username, "password": password})
         .map((response: Response) => {
             let token = response.json() && response.json().token;
             if (token) {

@@ -15,7 +15,8 @@ export class RegisterComponent {
     this.form = {
       username  : "",
       email     : "",
-      password  : ""
+      password1 : "",
+      password2 : ""
     }
   }
 
@@ -32,8 +33,12 @@ export class RegisterComponent {
     this.form.email = string;
   }
   
-  private onPasswordChange(string):void {
-    this.form.password = string;
+  private onPasswordChange1(string):void {
+    this.form.password1 = string;
+  }
+
+  private onPassword2Change(string):void {
+    this.form.password2 = string;
   }
 
   private navToLogin():void {

@@ -9,25 +9,27 @@
             <form (submit)="checkRegister()">
             <div class="input-group mb-3">
               <span class="input-group-addon"><i class="icon-user"></i></span>
-              <input autofocus type="text" class="form-control" (input)="onUsernameChange($event.target.value)" placeholder="Username">
+              <input autofocus required type="text" class="form-control" (input)="onUsernameChange($event.target.value)" placeholder="Username">
             </div>
 
-            <div class="input-group mb-3">
-              <span class="input-group-addon">@</span>
-              <input type="email" class="form-control" placeholder="Email" (input)="onEmailChange($event.target.value)">
-            </div>
-
+            
             <div class="input-group mb-3">
               <span class="input-group-addon"><i class="icon-lock"></i></span>
-              <input type="password" class="form-control" placeholder="Password" (input)="onPasswordChange($event.target.value)">
+              <input required type="password" class="form-control" placeholder="Password" (input)="onPassword1Change($event.target.value)">
             </div>
-
+            
             <div class="input-group mb-4">
               <span class="input-group-addon"><i class="icon-lock"></i></span>
-              <input type="password" class="form-control" placeholder="Repeat password">
+              <input required type="password" class="form-control" placeholder="Repeat password" (input)="onPassword1Change($event.target.value)">
             </div>
-
-            <button type="submit" class="btn btn-block btn-success" (click)="checkRegister()">Create Account</button>
+            
+            <small id="emailHelp" class="form-text text-muted">Email is optional</small>
+            <div class="input-group mb-3">
+              <span class="input-group-addon">@</span>
+              <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Email" (input)="onEmailChange($event.target.value)">
+            </div>
+            
+            <button type="submit" class="btn btn-block btn-success">Create Account</button>
             <button type="button" class="btn btn-block btn-cancel" (click)="navToLogin()">Cancel</button>
           </form>
           </div>

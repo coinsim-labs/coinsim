@@ -18,13 +18,17 @@ export class LoginComponent {
     this.username = string;
   }
 
-  private onPasswordChanges(string) {
+  private onPasswordChange(string) {
     this.password = string;
   }
 
 
   private checkLogin() {
-    this.cs.login(this.username, this.password);
+    this.cs.login(this.username, this.password).subscribe(result => {
+      if(!result) {
+        console.log('result', result);
+      }
+    });
   }
 
   private navToRegister() {
