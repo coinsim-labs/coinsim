@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { CryptoService } from '../../crypto.service';
+import { CoinsimService } from '../../coinsim.service';
 
 @Component({
   template: '<div>Bye</div>',
-  providers: [CryptoService]
+  providers: [CoinsimService]
 })
 export class LogoutComponent implements OnInit{
 
-  constructor(private router: Router, private cs: CryptoService) { }
+  constructor(private router: Router, private cs: CoinsimService) { }
 
   ngOnInit() {
     this.cs.logout();

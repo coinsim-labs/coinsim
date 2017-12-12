@@ -5,7 +5,7 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 import { AppComponent } from './app.component';
 
-import { CryptoService } from './crypto.service';
+import { CoinsimService } from './coinsim.service';
 
 // Import containers
 import {
@@ -91,7 +91,7 @@ import { TradingComponent } from './views/trading/trading.component';
     ...APP_DIRECTIVES,
   ],
   providers: [
-    CryptoService,
+    CoinsimService,
     {
     provide: LocationStrategy,
     useClass: HashLocationStrategy

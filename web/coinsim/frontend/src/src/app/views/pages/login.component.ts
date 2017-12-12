@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { CryptoService } from '../../crypto.service';
+import { CoinsimService } from '../../coinsim.service';
 
 @Component({
   templateUrl: 'login.component.html',
-  providers: [CryptoService]
+  providers: [CoinsimService]
 })
 export class LoginComponent {
 
   private username : string;
   private password : string;
 
-  constructor(private router: Router, private cs: CryptoService) { }
+  constructor(private router: Router, private cs: CoinsimService) { }
 
   private onUsernameChange(string) {
     this.username = string;

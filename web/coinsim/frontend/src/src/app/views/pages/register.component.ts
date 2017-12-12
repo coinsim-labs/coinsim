@@ -1,17 +1,17 @@
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { CryptoService } from '../../crypto.service';
+import { CoinsimService } from '../../coinsim.service';
 
 @Component({
   templateUrl: 'register.component.html',
-  providers: [CryptoService]
+  providers: [CoinsimService]
 })
 export class RegisterComponent {
   
   private form;
   
-  constructor(private router: Router, private cs: CryptoService) {
+  constructor(private router: Router, private cs: CoinsimService) {
     this.form = {
       username  : "",
       email     : "",

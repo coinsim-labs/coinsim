@@ -1,7 +1,28 @@
 <div class="animated fadeIn">
   <div class="container p-3 bg-white">
-    <p>
-      market works!
-    </p>
+    <table class="table table-hover">
+      <thead class="thead">
+        <tr>
+          <th>Name</th>
+          <th>Market Cap</th>
+          <th>Price</th>
+          <th>Volume (24h)</th>
+          <th>Circulating Supply</th>
+          <th>Change 24h</th>
+          <th>Pricegraph<th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let currency of marketModel">
+          <td>{{currency.NAME}}</td>
+            <td>{{currency.USD.MKTCAP}}</td>
+            <td>{{currency.USD.PRICE}}</td>
+            <td>{{currency.USD.VOLUME24HOUR}}</td>
+            <td>{{currency.USD.SUPPLY}}</td>
+            <td>{{currency.USD.CHANGEPCT24HOUR}} %</td>
+            <td>Pricegraph<td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

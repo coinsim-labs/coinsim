@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-//import { ChartsModule } from 'ng2-charts/ng2-charts';
+import { CommonModule } from '@angular/common';
 import { ChartModule } from 'angular-highcharts';
 
 import { MarketComponent } from './market.component';
@@ -9,7 +9,8 @@ import { MarketRoutingModule } from './market-routing.module';
   imports: [
     MarketRoutingModule,
 //    ChartsModule
-    ChartModule
+    ChartModule,
+    CommonModule
   ],
   declarations: [ MarketComponent ]
 })

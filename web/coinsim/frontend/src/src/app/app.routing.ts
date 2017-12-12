@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { CryptoService } from './crypto.service';
+import { CoinsimService } from './coinsim.service';
 
 // Import Containers
 import {
@@ -18,7 +18,7 @@ export const routes: Routes = [
   {
     path: '',
     component: FullLayoutComponent,
-    canActivate : [ CryptoService ],
+    canActivate : [ CoinsimService ],
     data: {
       title: 'Account'
     },
