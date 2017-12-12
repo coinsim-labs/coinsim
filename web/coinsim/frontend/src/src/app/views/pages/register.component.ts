@@ -41,7 +41,7 @@ export class RegisterComponent {
   }
 
 
-  private checkRegister():void {
+  private checkRegister() {
     let un = this.form.username,
         em = this.form.email,
         pw = this.form.password1,
@@ -56,9 +56,10 @@ export class RegisterComponent {
           if (result === true) {
               this.router.navigate(['/dashboard']);
           } else {
-              //TODO: stuff
           }
-      });
-  }
+        });
+        
+        return false;
+      }
 
 }

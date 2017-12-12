@@ -29,6 +29,7 @@ export class LoginComponent {
         console.log('result', result);
       }
     });
+    return false;
   }
 
   private navToRegister() {
