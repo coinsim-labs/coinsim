@@ -6,6 +6,7 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { AppComponent } from './app.component';
 
 import { CoinsimService } from './coinsim.service';
+import { CryptoCompareService } from './cryptocompare.service';
 
 // Import containers
 import {
@@ -95,7 +96,7 @@ import { TradingComponent } from './views/trading/trading.component';
     {
     provide: LocationStrategy,
     useClass: HashLocationStrategy
-  }],
+  }, CryptoCompareService],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
