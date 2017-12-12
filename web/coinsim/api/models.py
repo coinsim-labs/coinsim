@@ -25,6 +25,7 @@ class Transaction(models.Model):
     amount = models.FloatField(null=False)
     new_balance_source = models.FloatField(null=False)
     new_balance_dest = models.FloatField(null=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "{user}: {amount} {fr} -> {to}".format(
@@ -40,7 +41,7 @@ class Balance(models.Model):
     amount = models.FloatField()
 
     def __str__(self):
-        return "{user}: {amount} {curr}".format(
+        return "{user} : {amount} {curr}".format(
             user = str(self.user),
             amount = self.amount,
             curr=self.currency)
@@ -50,6 +51,6 @@ class Currency(models.Model):
     sym = models.CharField(max_length=32, unique=True)
 
     def __str__(self):
-        return "{name} ({sym}".format(
+        return "{name} ({sym})".format(
             name = self.name,
             sym = self.sym)
