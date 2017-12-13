@@ -9,8 +9,8 @@ import { CoinsimService } from '../../coinsim.service';
 })
 export class LoginComponent {
 
-  private username : string;
-  private password : string;
+  private username: string;
+  private password: string;
 
   constructor(private router: Router, private cs: CoinsimService) { }
 
@@ -22,14 +22,27 @@ export class LoginComponent {
     this.password = string;
   }
 
+  private failedLogin(): void {
+    // console.log('failed login');
+    const usernameInput = <HTMLInputElement>document.getElementById('username'),
+          passwordInput = <HTMLInputElement>document.getElementById('password'),
+          badRequestHint = document.getElementById('badRequestHint')
+
+    passwordInput.value = '';
+    badRequestHint.style.display = 'block';
+
+    usernameInput.blur();
+    passwordInput.blur();
+  }
+
 
   private checkLogin() {
-    this.cs.login(this.username, this.password).subscribe(result => {
-      if(!result) {
-        console.log('result', result);
-      }
-    });
-    return false;
+    return this.cs.login(this.username, this.password)
+      .map(result => result)
+      .subscribe(
+        data => document.getElementById('badRequestHint').style.display = 'none',
+        error => this.failedLogin()
+      );
   }
 
   private navToRegister() {

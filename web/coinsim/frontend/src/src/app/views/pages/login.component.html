@@ -5,28 +5,28 @@
         <div class="card-group">
           <div class="card p-4">
             <div class="card-body">
-              <form (submit)="checkLogin()">
+              <form (submit)="checkLogin(); $event.preventDefault()">
                 <h1>Login</h1>
                 <p class="text-muted">Sign In to your account</p>
                 <div class="input-group mb-3">
                   <span class="input-group-addon"><i class="icon-user"></i></span>
-                  <input required type="text" class="form-control" placeholder="Username" (input)="onUsernameChange($event.target.value)">
+                  <input id="username" required type="text" class="form-control" placeholder="Username" (input)="onUsernameChange($event.target.value)">
                 </div>
                 <div class="input-group mb-4">
                   <span class="input-group-addon"><i class="icon-lock"></i></span>
-                  <input required type="password" class="form-control" placeholder="Password" (input)="onPasswordChange($event.target.value)">
+                  <input id="password" required type="password" class="form-control" placeholder="Password" (input)="onPasswordChange($event.target.value)">
                 </div>
                 
                 <div class="row">
                   <div class="col-8">
                     <button type="submit" class="btn btn-primary px-4">Login</button>
                   </div>
-                  <div class="col-8 text-red">
-                      <small id="badrequestHint" style="color:#DF5A49;display:none;">Username or Password incorrect</small>
-                  </div>
                   <!-- <div class="col-6 text-left">
-                  <button type="button" class="btn btn-link px-4">Forgot password?</button>
-                </div> -->
+                    <button type="button" class="btn btn-link px-4">Forgot password?</button>
+                  </div> -->
+                </div>
+                <div class="col-16 text-red">
+                  <small id="badRequestHint" style="color:#DF5A49;font-weight:700;display:none;">Username or Password incorrect</small>
                 </div>
               </form>
             </div>

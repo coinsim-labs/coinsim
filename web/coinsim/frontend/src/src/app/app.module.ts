@@ -20,13 +20,13 @@ const APP_CONTAINERS = [
 
 // Import components
 import {
-  //AppAsideComponent,
-  //AppLinechartComponent,
+  // AppAsideComponent,
+  // AppLinechartComponent,
   AppBreadcrumbsComponent,
-  //AppFooterComponent,
+  // AppFooterComponent,
   AppHeaderComponent,
   AppSidebarComponent,
-  //AppSidebarFooterComponent,
+  // AppSidebarFooterComponent,
   AppSidebarFormComponent,
   AppSidebarHeaderComponent,
   AppSidebarMinimizerComponent,
@@ -34,13 +34,13 @@ import {
 } from './components';
 
 const APP_COMPONENTS = [
-  //AppLinechartComponent,
-  //AppAsideComponent,
+  // AppLinechartComponent,
+  // AppAsideComponent,
   AppBreadcrumbsComponent,
-  //AppFooterComponent,
+  // AppFooterComponent,
   AppHeaderComponent,
   AppSidebarComponent,
-  //AppSidebarFooterComponent,
+  // AppSidebarFooterComponent,
   AppSidebarFormComponent,
   AppSidebarHeaderComponent,
   AppSidebarMinimizerComponent,
@@ -68,7 +68,6 @@ import { AppRoutingModule } from './app.routing';
 // Import 3rd party components
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
-//import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ChartModule } from 'angular-highcharts';
 import { WalletComponent } from './views/wallet/wallet.component';
 import { MarketComponent } from './views/market/market.component';

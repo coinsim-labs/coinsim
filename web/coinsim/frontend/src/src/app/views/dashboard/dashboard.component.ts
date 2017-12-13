@@ -9,7 +9,7 @@ import { CoinsimService } from '../../coinsim.service';
 })
 export class DashboardComponent {
 
-  private username : string;
+  private username: string;
 
   constructor( private cs: CoinsimService ) {
     this.username = JSON.parse(localStorage.getItem('currentUser')).username;
