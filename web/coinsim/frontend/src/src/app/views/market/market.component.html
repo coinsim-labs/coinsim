@@ -14,7 +14,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let currency of marketModel">
-          <td>{{currency.NAME}}</td>
+          <td><img src="assets/img/crypto-icons/{{currency.NAME | lowercase}}.png" />{{currency.NAME}}</td>
           <td>{{currency.USD.MKTCAP | number}} $</td>
           <td>{{currency.USD.PRICE | number}} $</td>
           <td>{{currency.USD.VOLUME24HOUR | number}} $</td>
