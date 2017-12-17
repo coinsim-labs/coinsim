@@ -1,0 +1,92 @@
+
+.wallet-list,
+.bank-list,
+.bank-trading-list,
+.wallet-trading-list
+{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wallet-item {
+  padding: 0.5rem;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  
+  img {
+    width: 22px;
+    margin: 0.2rem;
+  }
+
+  div {
+    .title {
+      font-size: 1rem;
+      font-weight: 700;
+      padding-left: 5px;
+    }
+  
+    .sum {
+      font-size: 0.7rem;
+      color: #536c79;
+    }
+  }
+
+  &:hover {
+    background:#f0f3f5;
+    cursor: pointer;
+  }
+
+  &:active {
+    background:#a4b7c1;;
+  }
+}
+
+.trading-area {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  ul {
+    width: 45%;
+    padding: 0.2rem;
+  }
+}
+
+.trading-item {
+  border-radius: 5px;
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: row;
+  
+  .container-name {
+    width: 60%;
+    img {
+      width: 15px;
+      margin: 0.2rem
+    }
+
+    .title {
+      font-weight: 700;
+    }
+  }
+
+  .container-input {
+    width: 40%;
+    input {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .container-slider {
+    background-color: #f0f3f5;
+    width: 100%;
+  }
+
+  &:hover {
+    background-color: #f0f3f5;
+    cursor: pointer;
+  }
+}
