@@ -2,11 +2,13 @@
 
 # compiled output
 /dist
+dist/
 /tmp
 *.pyc
 __pycache__
 celerybeat-schedule
 *.pid
+pg-data/
 
 # dependencies
 node_modules
@@ -28,6 +30,7 @@ npm-debug.log
 testem.log
 /typings
 venv
+env
 
 # e2e
 /e2e/*.js
