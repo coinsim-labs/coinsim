@@ -1,36 +1,47 @@
 table.market-table {
   tr th {
     border-top: 0;
-
-    &:nth-child(2),
-    &:nth-child(3),
-    &:nth-child(4),
-    &:nth-child(5),
-    &:nth-child(6) {
       text-align: right;
-    }
+
+      &:nth-child(1) {
+        text-align: left;
+        padding-left: 44px;
+      }
   }
   tbody td{
+    text-align: right;
+    font-size: 1rem;
+    cursor: pointer;
+    
     &:nth-child(1) {
+      font-weight: 700;
+      text-align: left;
+      font-size: 1rem;
       img {
         width: 22px;
         margin-right: 12px;
       }
     }
-    &:nth-child(2),
-    &:nth-child(3),
-    &:nth-child(4),
-    &:nth-child(5),
-    &:nth-child(6) {
-      text-align: right;
-    }
-    
 
-    &.red {
+    &:nth-child(2) {
+      p {
+        margin-bottom: 0;
+      }
+
+      span {
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+    }
+
+
+  
+
+    .red {
       color: #DF5A49;
     }
 
-    &.green {
+    .green {
       color: #4dbd74;
     }
   }
@@ -47,6 +58,7 @@ table.market-table {
 @-webkit-keyframes flash-animation-green {  
   0%  { background-color: #4dbd74;}
   50% { background-color: opacify(#4dbd74, 0.2);}
+  100%{ background-color: opacify(#4dbd74, 0);}
 }
 
 @keyframes flash-animation-green {  

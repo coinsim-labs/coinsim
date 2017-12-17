@@ -4,22 +4,22 @@
       <thead class="thead">
         <tr>
           <th>Name</th>
-          <th data-sortable="true">Market Cap</th>
           <th>Price</th>
+          <th data-sortable="true">Market Cap</th>
           <th>Volume (24h)</th>
           <th>Circulating Supply</th>
-          <th>Change 24h</th>
           <th>Pricegraph<th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let currency of marketModel">
-          <td class={{currency.NAMEFLASH}}><img src="assets/img/crypto-icons/{{currency.NAME | lowercase}}.png" />{{currency.NAME}}</td>
-          <td class={{currency.MKTCAPFLASH}}>{{currency.USD.MKTCAP | number}} $</td>
-          <td class={{currency.PRICEFLASH}}>{{currency.USD.PRICE | number}} $</td>
-          <td class={{currency.VOLUME24HOURFLASH}}>{{currency.USD.VOLUME24HOUR | number}} $</td>
-          <td class={{currency.SUPPLYFLASH}}>{{currency.USD.SUPPLY | number}} $</td>
-          <td class="{{currency.USD.CLASS + ' ' + currency.SUPPLYFLASH}}">{{currency.USD.CHANGEPCT24HOUR | number : '1.2-2'}} %</td>
+          <td class={{currency.NAMEFLASH}}>
+            <img src="assets/img/crypto-icons/{{currency.NAME | lowercase}}.png" />{{nameObject[currency.NAME]}}
+          </td>
+          <td class={{currency.PRICEFLASH}}><p>{{currency.USD.PRICE | number}} $</p><span class="{{currency.USD.CLASS}} percent">{{currency.USD.CHANGEPCT24HOUR | number : '1.2-2'}} %</span></td>
+          <td class={{currency.MKTCAPFLASH}}>{{currency.USD.MKTCAP | number : '1.0-0'}} $</td>
+          <td class={{currency.VOLUME24HOURFLASH}}>{{currency.USD.VOLUME24HOUR | number : '1.2-2'}} $</td>
+          <td class={{currency.SUPPLYFLASH}}>{{currency.USD.SUPPLY | number : '1.0-0'}} $</td>
           <td>Pricegraph<td>
         </tr>
       </tbody>

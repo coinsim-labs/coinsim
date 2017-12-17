@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { CryptoCompareService } from '../../cryptocompare.service';}
+import { CryptoCompareService } from '../../cryptocompare.service';
+import { CoinsimService } from '../../coinsim.service';
 
 @Component({
   selector: 'app-market',
@@ -10,27 +11,33 @@ import { CryptoCompareService } from '../../cryptocompare.service';}
 export class MarketComponent implements OnInit {
 
   private marketModel;
+  private nameObject: Object;
 
-  constructor(private ccs: CryptoCompareService) {
-    this.getMarketModel();
-    setInterval(() => {
-        this.getMarketModel()
-      }, 2000);
-    // this.http.get("../../../assets/tmp/market.json")
-    //   .subscribe((success) => {
-    //     let x = success.json().DISPLAY;
-    //     this.marketModel = Object.keys(x).map(k => {
-    //        x[k].NAME = k;
-    //        return x[k];
-    //     });
-    //     console.log(success.json());
-    //   });
+  constructor(private ccs: CryptoCompareService, private cs: CoinsimService ) {
+    this.cs.currencies().subscribe(
+      (Success) => {
+        const array = Success.json();
+        const temp = {}
+        array.forEach(element => {
+          if (element.name !== 'US Dollar') {
+            temp[element.sym] = element.name;
+          }
+        });
+        this.nameObject = temp;
+
+        this.getMarketModel();
+        setInterval(() => {
+          this.getMarketModel()
+        }, 2000);
+      },
+      (Error) => alert("failed to connect to coinsim api")
+    )
   }
 
   getMarketModel() {
     this.ccs.multiCryptoPrice(
-      'BTC,ETC,ETH,BCH,XRP,LTC,QTUM,IOT,XMR,DASH,ZEC,EOS,MONA,NEO,OMG,XLM,BTG,ADA,POWR,WTC',
-      'USD', null, 'coinsim', null, null, true)
+      Object.keys(this.nameObject).join(','), 'USD',
+      null, 'coinsim', null, null, true)
       .map(result => result)
       .subscribe(
         (Success) => {this.onMarketModelSuccess(Success)},
@@ -38,7 +45,7 @@ export class MarketComponent implements OnInit {
       );
   }
 
-  onMarketModelSuccess(Success : Object) {
+  onMarketModelSuccess(Success: Object) {
     if (Success.hasOwnProperty('RAW')) {
       const newModel = Success.RAW;
       const oldModel = this.marketModel;
