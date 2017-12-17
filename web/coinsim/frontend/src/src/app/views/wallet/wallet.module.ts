@@ -6,6 +6,7 @@ import { WalletComponent } from './wallet.component';
 import { WalletRoutingModule } from './wallet-routing.module';
 import { AppLinechartComponent } from './../../components';
 import { AppPiechartComponent } from './../../components';
+import { BalanceHistoryComponent } from './app-balance-history/balance-history.component';
 
 @NgModule({
   imports: [
@@ -13,6 +14,6 @@ import { AppPiechartComponent } from './../../components';
 //    ChartsModule
     ChartModule
   ],
-  declarations: [ WalletComponent, AppLinechartComponent, AppPiechartComponent ]
+  declarations: [ WalletComponent, AppLinechartComponent, AppPiechartComponent, BalanceHistoryComponent ]
 })
 export class WalletModule { }
