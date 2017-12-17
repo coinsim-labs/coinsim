@@ -16,7 +16,7 @@ urlpatterns = [
     url(r'^docs/', DocView.as_view(title='Coinsim API Docs'), name='api_schema'),
 
     url(r'^trade/currencies/', Currencies.as_view()),
-    url(r'^trade/transaction/', Transaction.as_view()),
+    url(r'^trade/instant_order/', InstantOrder.as_view()),
 
     url(r'^', include(router.urls)),
     url(r'^user/balances/', Balances.as_view()),
