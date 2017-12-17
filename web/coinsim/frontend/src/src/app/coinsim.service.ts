@@ -85,6 +85,13 @@ export class CoinsimService {
             }
         );
     }
+  
+    transactions() {
+      const headers = new Headers();
+      headers.append('Authorization', 'JWT ' + this.token);
+      return this.http.get('/api/v1/user/transactions/', {headers: headers})
+            .map((response: Response) => response.json());
+    }
 
     /**
      * Get for currencies
