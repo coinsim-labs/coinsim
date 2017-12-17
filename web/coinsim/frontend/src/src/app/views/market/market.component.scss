@@ -1,7 +1,7 @@
 table.market-table {
   tr th {
     border-top: 0;
-    
+
     &:nth-child(2),
     &:nth-child(3),
     &:nth-child(4),
@@ -11,6 +11,12 @@ table.market-table {
     }
   }
   tbody td{
+    &:nth-child(1) {
+      img {
+        width: 22px;
+        margin-right: 12px;
+      }
+    }
     &:nth-child(2),
     &:nth-child(3),
     &:nth-child(4),
