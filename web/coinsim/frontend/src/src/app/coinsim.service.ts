@@ -87,6 +87,13 @@ export class CoinsimService {
     }
 
     /**
+     * Get for currencies
+     */
+    currencies() {
+        return this.http.get('/api/v1/trade/currencies/');
+    }
+
+    /**
      * Post for Logout
      */
     logout(): void {
