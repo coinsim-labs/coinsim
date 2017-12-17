@@ -24,7 +24,6 @@ export class MarketComponent implements OnInit {
           }
         });
         this.nameObject = temp;
-
         this.getMarketModel();
         setInterval(() => {
           this.getMarketModel()
@@ -47,7 +46,7 @@ export class MarketComponent implements OnInit {
 
   onMarketModelSuccess(Success: Object) {
     if (Success.hasOwnProperty('RAW')) {
-      const newModel = Success.RAW;
+      const newModel = Success['RAW'];
       const oldModel = this.marketModel;
       this.marketModel = Object.keys(newModel).map(k => {
           // set name
