@@ -49,6 +49,7 @@ class Balance(models.Model):
 class Currency(models.Model):
     name = models.CharField(max_length=64)
     sym = models.CharField(max_length=32, unique=True)
+    color = models.CharField(max_length=32, default='#C6EB6A')
 
     def __str__(self):
         return "{name} ({sym})".format(
