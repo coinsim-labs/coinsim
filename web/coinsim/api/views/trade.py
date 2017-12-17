@@ -1,6 +1,7 @@
 from django.db.models import QuerySet
 from django.conf import settings
 import requests
+import django.db.transaction
 from drf_openapi.utils import view_config
 from requests import RequestException
 from rest_framework import status
@@ -43,21 +44,22 @@ class InstantOrder(CreateAPIView):
         serializer.is_valid(raise_exception=True)
 
         transaction = serializer.validated_data
+        source_currency = serializer.validated_data.get('source_currency')
+        dest_currency = serializer.validated_data.get('dest_currency')
+        amount = serializer.validated_data.get('amount')
+
         currencies = [ c.sym for c in Currency.objects.all() ]
-        if transaction.source_currency not in currencies \
-                or transaction.dest_currency not in currencies:
+        if source_currency not in currencies \
+                or dest_currency not in currencies:
             raise APIException('currency-unsupported', 400)
 
-        if transaction.amount <= 0:
+        if amount <= 0:
             raise APIException('invalid-balance', 400)
 
-        balance = Balance.objects.get(user=request.user.profile, currency=transaction.dest_currency)
-        if transaction.amount < balance.amount:
-            raise APIException('balance-too-low', 400)
 
         r = requests.get(settings.CRYPTO_API.format(
-            fsym=transaction.source_currency,
-            tsym=transaction.dest_currency
+            fsym=source_currency,
+            tsym=dest_currency
         ))
 
         try:
@@ -66,29 +68,47 @@ class InstantOrder(CreateAPIView):
             raise APIException('external-api-error', 500)
 
         response = r.json()
-        order = response \
-            .get(transaction.source_currency, {}) \
-            .get(transaction.dest_currency_currency)
+        dest_price = response \
+            .get(source_currency, {}) \
+            .get(dest_currency)
 
-        if order is None:
+        if dest_price is None:
             raise APIException('external-api-error', 500)
 
-        with transaction.atomic():
+        order = amount * dest_price
+
+        balance = Balance.objects.get(user=request.user.profile, currency=source_currency)
+        if amount > balance.amount:
+            raise APIException('balance-too-low', 400)
+
+        with django.db.transaction.atomic():
             source_balance, _ = Balance.objects.get_or_create(
                 user=request.user.profile,
-                currency=transaction.source_currency
+                currency=source_currency
             )
-            source_balance.amount -= transaction.amount
+            source_balance.amount -= amount
 
             dest_balance, _ = Balance.objects.get_or_create(
                 user=request.user.profile,
-                currency=transaction.dest_currency
+                currency=dest_currency
             )
             dest_balance.amount += order
 
             source_balance.save()
             dest_balance.save()
 
+        self.kwargs['new_balance_source'] = source_balance.amount
+        self.kwargs['new_balance_dest'] = dest_balance.amount
+
         self.perform_create(serializer)
+
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+    def perform_create(self, serializer):
+        serializer.save(
+            user=self.request.user.profile,
+            new_balance_source=self.kwargs['new_balance_source'],
+            new_balance_dest=self.kwargs['new_balance_dest']
+        )

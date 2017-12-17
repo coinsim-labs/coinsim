@@ -33,6 +33,6 @@ exec gunicorn coinsim.wsgi:application \
     --name coinsim \
     --bind 0.0.0.0:8000 \
     --workers 3 \
-    --log-level=info \
+    --log-level=debug \
     --reload \
     "$@"
