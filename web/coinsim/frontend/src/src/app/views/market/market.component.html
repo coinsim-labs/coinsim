@@ -14,12 +14,12 @@
       </thead>
       <tbody>
         <tr *ngFor="let currency of marketModel">
-          <td>{{currency.NAME}}</td>
-          <td>{{currency.USD.MKTCAP | number}} $</td>
-          <td>{{currency.USD.PRICE | number}} $</td>
-          <td>{{currency.USD.VOLUME24HOUR | number}} $</td>
-          <td>{{currency.USD.SUPPLY | number}} $</td>
-          <td class={{currency.USD.CLASS}}>{{currency.USD.CHANGEPCT24HOUR | number : '1.2-2'}} %</td>
+          <td class={{currency.NAMEFLASH}}>{{currency.NAME}}</td>
+          <td class={{currency.MKTCAPFLASH}}>{{currency.USD.MKTCAP | number}} $</td>
+          <td class={{currency.PRICEFLASH}}>{{currency.USD.PRICE | number}} $</td>
+          <td class={{currency.VOLUME24HOURFLASH}}>{{currency.USD.VOLUME24HOUR | number}} $</td>
+          <td class={{currency.SUPPLYFLASH}}>{{currency.USD.SUPPLY | number}} $</td>
+          <td class="{{currency.USD.CLASS + ' ' + currency.SUPPLYFLASH}}">{{currency.USD.CHANGEPCT24HOUR | number : '1.2-2'}} %</td>
           <td>Pricegraph<td>
         </tr>
       </tbody>

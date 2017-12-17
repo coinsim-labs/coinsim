@@ -15,7 +15,7 @@ export class MarketComponent implements OnInit {
     this.getMarketModel();
     setInterval(() => {
         this.getMarketModel()
-      }, 6000);
+      }, 2000);
     // this.http.get("../../../assets/tmp/market.json")
     //   .subscribe((success) => {
     //     let x = success.json().DISPLAY;
@@ -43,7 +43,7 @@ export class MarketComponent implements OnInit {
       const newModel = Success.RAW;
       const oldModel = this.marketModel;
       this.marketModel = Object.keys(newModel).map(k => {
-          //set name
+          // set name
           newModel[k].NAME = k;
 
           // setPercentclass
@@ -61,10 +61,27 @@ export class MarketComponent implements OnInit {
                 oldCurrency = currency;
               }
             });
-            console.log(newModel[k], oldCurrency);
 
             Object.keys(newModel[k].USD).map(j => {
-              console.log(newModel[k].USD[j], oldModel);
+              // console.log(newModel[k].USD[j], oldCurrency.USD[j]);
+              if (Number(newModel[k].USD[j])) {
+                // console.log(oldCurrency.USD[j] < newModel[k].USD[j], newModel[k].USD[j], oldCurrency.USD[j])
+
+                // old is smaller
+                if (newModel[k].USD[j] > oldCurrency.USD[j]) {
+                  const flashValue = j + 'FLASH';
+                  newModel[k][flashValue] = 'flash-green';
+                  console.log(newModel[k]);
+                }
+
+                // old is bigger
+                if (newModel[k].USD[j] < oldCurrency.USD[j]) {
+                  const flashValue = j + 'FLASH';
+                  newModel[k][flashValue] = 'flash-red';
+                  console.log(newModel[k]);
+                }
+
+              }
             })
           }
 
