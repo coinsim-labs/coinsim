@@ -39,10 +39,18 @@ table.market-table {
 
     .red {
       color: #DF5A49;
+      &:after{
+        font-family: FontAwesome;
+        content: "       \f088"
+      }
     }
 
     .green {
       color: #4dbd74;
+      &:after{
+          font-family: FontAwesome;
+          content: "       \f087";
+      }
     }
   }
 }

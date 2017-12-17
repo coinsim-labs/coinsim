@@ -28,7 +28,7 @@ export class MarketComponent implements OnInit {
         this.getMarketModel();
         setInterval(() => {
           this.getMarketModel()
-        }, 2000);
+        }, 6000);
       },
       (Error) => alert("failed to connect to coinsim api")
     )
