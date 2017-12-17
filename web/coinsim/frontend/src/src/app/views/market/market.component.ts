@@ -62,6 +62,10 @@ export class MarketComponent implements OnInit {
               }
             });
             console.log(newModel[k], oldCurrency);
+
+            Object.keys(newModel[k].USD).map(j => {
+              console.log(newModel[k].USD[j], oldModel);
+            })
           }
 
           return newModel[k];
