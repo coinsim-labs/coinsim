@@ -1,0 +1,26 @@
+ <div class="container mb-3 p-2 bg-white">
+      <div class="row p-0 m-0">
+		<div class="col-md-6 p-1 bg-white">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="thead">
+                <tr>
+                  <th>Currency</th>
+                  <th>Amount</th>
+                  <th>Value in US Dollar</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let balance of balances | async">
+		          <td>{{balance.currency}}</td>
+		          <td>{{balance.amount}}</td>
+		          <td>{{balance.inUSD}}</td>
+		        </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-md-6 p-1 bg-white">
+          <div class="piechart" [chart]="chart"></div>
+        </div>
+	</div>
+</div>
