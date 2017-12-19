@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { CryptoCompareService } from '../../cryptocompare.service';
 import { CoinsimService } from '../../coinsim.service';
@@ -8,31 +8,20 @@ import { CoinsimService } from '../../coinsim.service';
   templateUrl: './market.component.html',
   styleUrls: ['./market.component.scss']
 })
-export class MarketComponent implements OnInit {
+export class MarketComponent implements OnInit, OnDestroy {
 
   private marketModel;
+  private marketIntervall;
   private nameObject: Object;
 
   constructor(private ccs: CryptoCompareService, private cs: CoinsimService ) {
-    this.cs.currencies().subscribe(
-      (Success) => {
-        const array = Success.json();
-        const temp = {}
-        array.forEach(element => {
-          if (element.name !== 'US Dollar') {
-            temp[element.sym] = element.name;
-          }
-        });
-        this.nameObject = temp;
-        this.getMarketModel();
-        setInterval(() => {
-          this.getMarketModel()
-        }, 6000);
-      },
-      (Error) => alert("failed to connect to coinsim api")
-    )
   }
 
+  /**
+   * Use Cryprocompare Service to get
+   * Info from currencies
+   * On Success => onMarketSuccess()
+   */
   getMarketModel() {
     this.ccs.multiCryptoPrice(
       Object.keys(this.nameObject).join(','), 'USD',
@@ -44,6 +33,11 @@ export class MarketComponent implements OnInit {
       );
   }
 
+  /**
+   * add styling properties to data received
+   * bind model to table
+   * @param Success JSON Object : Data
+   */
   onMarketModelSuccess(Success: Object) {
     if (Success.hasOwnProperty('RAW')) {
       const newModel = Success['RAW'];
@@ -96,8 +90,43 @@ export class MarketComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
+  
 
+  /**
+   * Get supported currencies
+   * format currencies for request
+   * set intervall in private var to call Market Model
+   */
+  ngOnInit() {
+    console.log('onInitCalled')
+    this.cs.currencies().subscribe(
+      (Success) => {
+        const array = Success.json();
+        const temp = {}
+        array.forEach(element => {
+          if (element.name !== 'US Dollar') {
+            temp[element.sym] = element.name;
+          }
+        });
+        this.nameObject = temp;
+        this.getMarketModel();
+        
+        this.marketIntervall = setInterval(() => {
+          this.getMarketModel()
+        }, 6000);
+
+      },
+      (Error) => alert('failed to connect to coinsim api')
+    );
+  }
+
+  /**
+   * On exit Market kill intervall
+   */
+  ngOnDestroy() {
+    if (this.marketIntervall) {
+      this.marketIntervall = null;
+    }
   }
 
 }
