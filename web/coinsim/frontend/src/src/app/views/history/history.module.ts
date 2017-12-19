@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 
 import { HistoryComponent } from './history.component';
 import { HistoryRoutingModule } from './history-routing.module';
+import { HistoryTableComponent } from './history-table/history-table.component';
 // import { AppLinechartComponent } from './../../components';
 
 @NgModule({
@@ -11,6 +12,6 @@ import { HistoryRoutingModule } from './history-routing.module';
     HistoryRoutingModule,
 //    ChartsModule
   ],
-  declarations: [ HistoryComponent ]
+  declarations: [ HistoryComponent, HistoryTableComponent ]
 })
 export class HistoryModule { }
