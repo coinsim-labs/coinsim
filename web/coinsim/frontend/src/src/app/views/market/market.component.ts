@@ -23,6 +23,7 @@ export class MarketComponent implements OnInit, OnDestroy {
    * On Success => onMarketSuccess()
    */
   getMarketModel() {
+    console.log('MarketModel called');
     this.ccs.multiCryptoPrice(
       Object.keys(this.nameObject).join(','), 'USD',
       null, 'coinsim', null, null, true)
@@ -61,30 +62,25 @@ export class MarketComponent implements OnInit, OnDestroy {
                 oldCurrency = currency;
               }
             });
-
+            
             Object.keys(newModel[k].USD).map(j => {
-              // console.log(newModel[k].USD[j], oldCurrency.USD[j]);
               if (Number(newModel[k].USD[j])) {
-                // console.log(oldCurrency.USD[j] < newModel[k].USD[j], newModel[k].USD[j], oldCurrency.USD[j])
 
                 // old is smaller
                 if (newModel[k].USD[j] > oldCurrency.USD[j]) {
                   const flashValue = j + 'FLASH';
                   newModel[k][flashValue] = 'flash-green';
-                  console.log(newModel[k]);
                 }
 
                 // old is bigger
                 if (newModel[k].USD[j] < oldCurrency.USD[j]) {
                   const flashValue = j + 'FLASH';
                   newModel[k][flashValue] = 'flash-red';
-                  console.log(newModel[k]);
                 }
 
               }
             })
           }
-
           return newModel[k];
       });
     }
@@ -98,7 +94,6 @@ export class MarketComponent implements OnInit, OnDestroy {
    * set intervall in private var to call Market Model
    */
   ngOnInit() {
-    console.log('onInitCalled')
     this.cs.currencies().subscribe(
       (Success) => {
         const array = Success.json();
@@ -125,7 +120,7 @@ export class MarketComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     if (this.marketIntervall) {
-      this.marketIntervall = null;
+      clearInterval(this.marketIntervall);
     }
   }
 
