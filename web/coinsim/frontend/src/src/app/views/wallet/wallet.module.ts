@@ -7,8 +7,8 @@ import { WalletComponent } from './wallet.component';
 import { WalletRoutingModule } from './wallet-routing.module';
 import { AppLinechartComponent } from './../../components';
 import { AppPiechartComponent } from './../../components';
-import { BalanceHistoryComponent } from './app-balance-history/balance-history.component';
-import { WalletCompositionComponent } from './app-wallet-composition/wallet-composition.component';
+import { BalanceHistoryComponent } from './balance-history/balance-history.component';
+import { WalletCompositionComponent } from './wallet-composition/wallet-composition.component';
 
 
 @NgModule({
