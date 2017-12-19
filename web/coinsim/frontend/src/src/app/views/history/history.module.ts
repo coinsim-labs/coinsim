@@ -7,6 +7,7 @@ import { HistoryComponent } from './history.component';
 import { HistoryRoutingModule } from './history-routing.module';
 import { HistoryTableComponent } from './history-table/history-table.component';
 import { ReversePipe } from './history-table/reversepipe';
+import { MarketPriceComponent } from './market-price/market-price.component';
 // import { AppLinechartComponent } from './../../components';
 
 @NgModule({
@@ -15,6 +16,6 @@ import { ReversePipe } from './history-table/reversepipe';
     CommonModule
 //    ChartsModule
   ],
-  declarations: [ HistoryComponent, HistoryTableComponent, ReversePipe ]
+  declarations: [ HistoryComponent, HistoryTableComponent, ReversePipe, MarketPriceComponent ]
 })
 export class HistoryModule { }
