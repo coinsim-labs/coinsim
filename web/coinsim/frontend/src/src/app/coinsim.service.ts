@@ -15,15 +15,29 @@ export class CoinsimService {
     }
 
     /**
+     * Get Header Header with JWT Token
+     */
+    getHeaders() {
+        const headers = new Headers();
+        headers.append('Authorization', 'JWT ' + this.token);
+        return headers;
+    }
+
+    /**
      * Routerfunction to check if user logged in
      * TODO: Should be with VERIFY TOKEN
      */
-    canActivate() {
-        if (localStorage.getItem('currentUser')) {
-            return true;
-        } else {
-            return false;
-        }
+    canActivate(): any {
+        const token = this.token;
+        return this.http.post('/api/v1/auth/token-verify/', {'token' : token})
+        .map((response: Response) => {
+            console.log('Response', response.json());
+            if (response.json().token) {
+                return true;
+            } else {
+                return false;
+            }
+        })
     }
 
     /**
@@ -87,16 +101,14 @@ export class CoinsimService {
     }
   
     transactions() {
-      const headers = new Headers();
-      headers.append('Authorization', 'JWT ' + this.token);
-      return this.http.get('/api/v1/user/transactions/', {headers: headers})
+        const headers = this.getHeaders();
+        return this.http.get('/api/v1/user/transactions/', {headers: headers})
             .map((response: Response) => response.json());
     }
   
     balances() {
-      const headers = new Headers();
-      headers.append('Authorization', 'JWT ' + this.token);
-      return this.http.get('/api/v1/user/balances/', {headers: headers})
+         const headers = this.getHeaders();
+         return this.http.get('/api/v1/user/balances/', {headers: headers})
             .map((response: Response) => response.json());
     }
 
