@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as $ from 'jquery';
+import { CoinsimService } from '../../coinsim.service';
+import * as $ from 'jquery'; // SORRY :(
 
 @Component({
   selector: 'app-trading',
@@ -9,21 +10,43 @@ import * as $ from 'jquery';
 export class TradingComponent implements OnInit {
 
   private tradingModel = {
-    sell : [],
-    buy : []
+    sell: [],
+    buy: []
+  }
+  private walletModel = {
+    currencies: []
+  };
+  private bankModel = {
+    currencies: []
+  };
+
+  constructor(private cs: CoinsimService) {
   }
 
-  constructor() { }
 
   ngOnInit() {
+    this.cs.balances().subscribe((balanceResult) => {
+      this.walletModel.currencies = balanceResult;
+    });
+    this.cs.currencies().subscribe((currenciesResult) => {
+      this.bankModel.currencies = currenciesResult;
+    })
   }
 
-  getInputSuffix(string) {
-    return string + 'Input';
+  getInputId(sym, string) {
+    return '#' + sym + string + 'Input';
   }
-  getSliderSuffix(string) {
-    return string + 'Slider'
+
+  getSliderId(sym, string) {
+    return '#' + sym + string + 'Slider'
   }
+
+
+  /**
+   * Helper for getting Listelement that was clicked
+   * (depending on where user clicks, a domElem inside of the listelement can call the event)
+   * @param domElem Element that called the function "createBuyObject" or "createSellObject"
+   */
   getListElement(domElem) {
     while (domElem.tagName !== 'LI') {
       domElem = domElem.parentElement;
@@ -35,24 +58,42 @@ export class TradingComponent implements OnInit {
     return domElem;
   }
 
-  createSellObject(target) {
+
+
+  /**
+   * Called when item from wallet was selected
+   * TODO: highlight presssed currency from wallet
+   * creates Object in tradingModel
+   * @param target domElem that called function
+   * @param item  model of that item
+   */
+  createSellObject(target, item) {
     const listElement = this.getListElement(target);
     listElement.className += ' selected';
-    const mockData1 = {
-      'NAME' : 'Bitcoin',
-      'SHORT': 'BTC',
-      'BALANCE' : 0.004
+
+    const currency = {
+      'name': 'PLACEHOLDER',
+      'sym': item.currency,
+      'balance': item.amount,
+      'amount': item.amount
     };
-    this.tradingModel.sell.push(mockData1)
+
+    this.tradingModel.sell.push(currency)
   }
 
-  createBuyObject(target) {
-    const mockData = {
-      'NAME' : 'Etherum',
-      'SHORT': 'ETH',
-      'BALANCE' : 0.04,
+  /**
+  * Called when item from bank was selected
+   * TODO: highlight presssed currency from wallet
+   * creates Object in tradingModel
+   * @param target domElem that called function
+   * @param item  model of that item
+   */
+  createBuyObject(target, item) {
+    const currency = {
+      'name': item.name,
+      'sym': item.sym
     };
-    this.tradingModel.buy.push(mockData);
+    this.tradingModel.buy.push(currency);
   }
 
   /**
@@ -64,7 +105,7 @@ export class TradingComponent implements OnInit {
    * @param list in which list the clickevent happend
    */
   updateSlider(from, short, list) {
-    const input = $('#' + short + this.getInputSuffix(list));
+    const input = $(this.getInputId(short, list));
     input.val(from);
   }
 
@@ -78,25 +119,27 @@ export class TradingComponent implements OnInit {
    */
   onInputChange(event, item, list) {
     let newValue = event.srcElement.value;
-    const slider = $('#' + item.SHORT + this.getSliderSuffix(list));
+    const slider = $(this.getSliderId(item.sym, list));
     const sliderElement = slider.data('ionRangeSlider');
 
-    if (item.BALANCE < newValue) {
-      event.srcElement.value = item.BALANCE;
-      newValue = item.BALANCE;
+    // check for invalid input
+    if (item.balance < newValue) {
+      event.srcElement.value = item.balance;
+      newValue = item.balance;
     }
-    
+
     if (!sliderElement) {
+      // Initialize Rangeslider 
       (slider as any).ionRangeSlider({
-        type : 'single',
-        step :  0.0001,
-        min  :  0,
+        type: 'single',
+        step: 0.0001,
+        min: 0,
         from: newValue,
-        max  :  item.BALANCE,
-        onChange : (data) => {
-          this.updateSlider(data.from, item.SHORT, list);
+        max: item.balance,
+        onChange: (data) => {
+          this.updateSlider(data.from, item.sym, list);
         }
-        });
+      });
     } else {
       sliderElement.update({
         from: newValue,
@@ -104,6 +147,10 @@ export class TradingComponent implements OnInit {
     }
   }
 
+  /**
+   * Called when reset button was pressed
+   * empties all models
+   */
   reset() {
     this.tradingModel.sell = [];
     this.tradingModel.buy = [];

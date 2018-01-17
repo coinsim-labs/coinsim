@@ -115,7 +115,8 @@ export class CoinsimService {
      * Get for currencies
      */
     currencies() {
-        return this.http.get('/api/v1/trade/currencies/');
+        return this.http.get('/api/v1/trade/currencies/')
+            .map((response: Response) => response.json());
     }
 
     /**
