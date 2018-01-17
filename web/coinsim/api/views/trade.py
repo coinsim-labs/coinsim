@@ -99,6 +99,7 @@ class InstantOrder(CreateAPIView):
 
         self.kwargs['new_balance_source'] = source_balance.amount
         self.kwargs['new_balance_dest'] = dest_balance.amount
+        self.kwargs['dest_price'] = dest_price
 
         self.perform_create(serializer)
 
@@ -110,5 +111,6 @@ class InstantOrder(CreateAPIView):
         serializer.save(
             user=self.request.user.profile,
             new_balance_source=self.kwargs['new_balance_source'],
-            new_balance_dest=self.kwargs['new_balance_dest']
+            new_balance_dest=self.kwargs['new_balance_dest'],
+            dest_price=self.kwargs['dest_price']
         )

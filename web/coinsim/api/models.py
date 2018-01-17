@@ -23,6 +23,7 @@ class Transaction(models.Model):
     source_currency = models.CharField(max_length=32, null=False)
     dest_currency = models.CharField(max_length=32, null=False)
     amount = models.FloatField(null=False)
+    dest_price = models.FloatField(null=False)
     new_balance_source = models.FloatField(null=True)
     new_balance_dest = models.FloatField(null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
