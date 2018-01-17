@@ -77,14 +77,14 @@ export class MarketComponent implements OnInit {
                 if (newModel[k].USD[j] > oldCurrency.USD[j]) {
                   const flashValue = j + 'FLASH';
                   newModel[k][flashValue] = 'flash-green';
-                  console.log(newModel[k]);
+                  // console.log(newModel[k]);
                 }
 
                 // old is bigger
                 if (newModel[k].USD[j] < oldCurrency.USD[j]) {
                   const flashValue = j + 'FLASH';
                   newModel[k][flashValue] = 'flash-red';
-                  console.log(newModel[k]);
+                  // console.log(newModel[k]);
                 }
 
               }

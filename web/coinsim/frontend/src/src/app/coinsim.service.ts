@@ -25,7 +25,6 @@ export class CoinsimService {
 
     /**
      * Routerfunction to check if user logged in
-     * TODO: Should be with VERIFY TOKEN
      */
     canActivate(): any {
         const token = this.token;
