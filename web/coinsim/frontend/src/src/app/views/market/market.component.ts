@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { CryptoCompareService } from '../../cryptocompare.service';
 import { CoinsimService } from '../../coinsim.service';
+import {Router} from "@angular/router";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-market',
@@ -13,24 +15,28 @@ export class MarketComponent implements OnInit {
   private marketModel;
   private nameObject: Object;
 
-  constructor(private ccs: CryptoCompareService, private cs: CoinsimService ) {
-    this.cs.currencies().subscribe(
-      (Success) => {
-        const array = Success.json();
-        const temp = {}
-        array.forEach(element => {
-          if (element.name !== 'US Dollar') {
-            temp[element.sym] = element.name;
-          }
+  constructor(private router : Router, private ccs: CryptoCompareService, private cs: CoinsimService ) {
+
+        const array = this.cs.currencies().subscribe(currencies => {
+          const temp = {}
+          currencies.forEach(element => {
+            if (element.name !== 'US Dollar') {
+              temp[element.sym] = element.name;
+            }
+          });
+          this.nameObject = temp;
+          this.getMarketModel();
+          setInterval(() => {
+            this.getMarketModel()
+          }, 6000);
         });
-        this.nameObject = temp;
-        this.getMarketModel();
-        setInterval(() => {
-          this.getMarketModel()
-        }, 6000);
-      },
-      (Error) => alert("failed to connect to coinsim api")
-    )
+        
+
+
+    
+    console.log(router.isActive('market', true));
+
+
   }
 
   getMarketModel() {
