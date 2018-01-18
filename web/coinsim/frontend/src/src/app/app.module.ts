@@ -92,6 +92,7 @@ import { TradingComponent } from './views/trading/trading.component';
     ...APP_CONTAINERS,
     ...APP_COMPONENTS,
     ...APP_DIRECTIVES,
+    MarketComponent
   ],
   providers: [
     CoinsimService,

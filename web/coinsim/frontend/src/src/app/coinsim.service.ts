@@ -2,7 +2,14 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/map'
+//import 'rxjs/add/operator/map'
+import { map } from 'rxjs/operators';
+
+export class Currency {
+    name: string;
+    sym: string;
+    color: string;
+}
 
 @Injectable()
 export class CoinsimService {
@@ -100,12 +107,29 @@ export class CoinsimService {
             .map((response: Response) => response.json());
     }
 
+    protected _currencies: Array<Currency>;
+
     /**
-     * Get for currencies
+     * Observable of supported Currencies. 
+     * If called initially or refresh is true, an api call is issued.
      */
-    currencies() {
-        return this.http.get('/api/v1/trade/currencies/');
-    }
+    public currencies(refresh?: boolean): Observable<Array<Currency>> {
+        return new Observable(observer => {
+            if (this._currencies) {
+              observer.next(this._currencies);
+              return observer.complete();
+            }
+            this.http
+              .get('/api/v1/trade/currencies/')
+              .map((r: Response) => (r.json() as Array<Currency>))
+              .subscribe((currencies: Array<Currency>) => {
+                this._currencies = currencies;
+                observer.next(currencies);
+                observer.complete();
+              });
+          });
+    
+      }
 
     /**
      * Post for Logout

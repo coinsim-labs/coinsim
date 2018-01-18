@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { CoinsimService } from './coinsim.service';
+import { MarketComponent } from './views/market/market.component'
 
 // Import Containers
 import {
@@ -37,7 +38,13 @@ export const routes: Routes = [
       },
       {
         path: 'market',
-        loadChildren: './views/market/market.module#MarketModule'
+        component: MarketComponent,
+        children: [
+          {
+            path: '',
+            loadChildren: './views/market/market.module#MarketModule'
+          }
+        ]
       },
       {
         path: 'trading',
@@ -62,6 +69,9 @@ export const routes: Routes = [
 
 @NgModule({
   imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ]
+  exports: [ RouterModule ],
+  declarations: [ 
+    //MarketComponent
+  ]
 })
 export class AppRoutingModule {}
