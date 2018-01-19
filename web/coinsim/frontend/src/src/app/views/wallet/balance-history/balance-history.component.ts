@@ -1,5 +1,6 @@
 import { CoinsimService } from '../../../coinsim.service';
 import { CryptoCompareService } from '../../../cryptocompare.service';
+import { BalanceHistory } from './balancehistory';
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'angular-highcharts';
 import { DatePipe } from '@angular/common';
@@ -53,7 +54,7 @@ export class BalanceHistoryComponent implements OnInit {
     });
   }
   
-  transactionPriceObservable(currency, currencies) {
+  transactionPriceObservable(currency, currencies): Observable<BalanceHistory[]> {
     return Observable.create((observer) => {
       const timestamps = Object.keys(currencies[currency]).sort();
       const firstTimestamp = timestamps[0];
@@ -62,7 +63,7 @@ export class BalanceHistoryComponent implements OnInit {
         this.cryptoService.histo('day', 'USD', currency,
                                          null, null, null, null, null, timeDiff)
         .subscribe((priceResult) => {
-          observer.next({currency: currency, balances: currencies[currency], price: priceResult});
+          observer.next({currency: currency, balances: currencies[currency], prices: priceResult.Data});
         });
       }
     }).first();
@@ -127,13 +128,16 @@ export class BalanceHistoryComponent implements OnInit {
       Observable.forkJoin(...tasks).subscribe((transactionPriceResults) => { 
         const series = [];
         const results = [];
-        transactionPriceResults.forEach((res) => {
+        transactionPriceResults.forEach((res: BalanceHistory) => {
           const currency = res.currency;
-          const priceResult = res.price.Data;
+          const priceResult = res.prices;
           const balances = res.balances;
            
+          // TODO timeStamps of prices and balances don't match perfectly
+          // so right now we just assume that timeStamp of price[i] ~= timeStamp of balance[i]
+          // Should create a better solution.
           const timestamps = Object.keys(balances).sort();
-          for (let i = 0; i < timestamps.length-1; i++) {
+          for (let i = 0; i < timestamps.length - 1; i++) {
             const timestamp = timestamps[i];
             const balance = balances[timestamp];
             const date = new Date(parseInt(timestamp, 10));

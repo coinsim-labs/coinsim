@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable, Timestamp } from 'rxjs';
-import { CoinsimService } from './coinsim.service';
+import { CoinsimService, Currency } from './coinsim.service';
 import 'rxjs/add/operator/map'
 
 @Injectable()
 export class CryptoCompareService {
   private baseURL = 'https://min-api.cryptocompare.com/data/';
 
-    private currencies: Observable<Response>;
+  private currencies: Array<Currency>;
 
   constructor(private http: Http, private cs: CoinsimService) {
         // onInit, get current supported currencies
-        this.currencies = cs.currencies();
-        console.log('cryptocompare service', this.currencies);
+        cs.currencies().subscribe(currencies => {
+            this.currencies = currencies
+            console.log('cryptocompare service', this.currencies);
+        })
+        
    }
 
 

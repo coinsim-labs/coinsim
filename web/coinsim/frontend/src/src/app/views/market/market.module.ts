@@ -5,6 +5,8 @@ import { ChartModule } from 'angular-highcharts';
 import { MarketComponent } from './market.component';
 import { MarketRoutingModule } from './market-routing.module';
 
+import { DetailComponent } from '../market-detail/detail.component';
+
 @NgModule({
   imports: [
     MarketRoutingModule,
@@ -12,6 +14,9 @@ import { MarketRoutingModule } from './market-routing.module';
     ChartModule,
     CommonModule
   ],
-  declarations: [ MarketComponent ]
+  declarations: [ 
+    //MarketComponent,
+    DetailComponent
+  ]
 })
 export class MarketModule { }

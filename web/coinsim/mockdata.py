@@ -21,6 +21,10 @@ u.save()
 
 profile = u.profile
 
+Currency.objects.all().delete()
+profile.balances.all().delete()
+profile.transactions.all().delete()
+
 # Create some Currencies
 
 Currency(sym='USD', name='US Dollar').save()
@@ -65,8 +69,8 @@ Balance(user=profile, currency='BCH', amount=0.34515846).save()
 
 # Create some Transactions
 
-Transaction(user=profile, source_currency='USD', dest_currency='BTC', amount=1000.0, new_balance_source=4000.0, new_balance_dest=0.05904303).save()
-Transaction(user=profile, source_currency='USD', dest_currency='LTC', amount=500.0, new_balance_source=3500.0, new_balance_dest=2.05742690).save()
-Transaction(user=profile, source_currency='USD', dest_currency='ETH', amount=700.0, new_balance_source=2800.0, new_balance_dest=1.28910595).save()
-Transaction(user=profile, source_currency='USD', dest_currency='BCH', amount=500.0, new_balance_source=2300.0, new_balance_dest=0.34515846).save()
+Transaction(user=profile, source_currency='USD', dest_currency='BTC', amount=1000.0, new_balance_source=4000.0, dest_price=16936.800160832, new_balance_dest=0.05904303).save()
+Transaction(user=profile, source_currency='USD', dest_currency='LTC', amount=500.0, new_balance_source=3500.0, dest_price=243.021999955, new_balance_dest=2.05742690).save()
+Transaction(user=profile, source_currency='USD', dest_currency='ETH', amount=700.0, new_balance_source=2800.0, dest_price=543.011999906, new_balance_dest=1.28910595).save()
+Transaction(user=profile, source_currency='USD', dest_currency='BCH', amount=500.0, new_balance_source=2300.0, dest_price=1448.610009443, new_balance_dest=0.34515846).save()
 

@@ -1,29 +1,45 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { CryptoCompareService } from '../../cryptocompare.service';
 import { CoinsimService } from '../../coinsim.service';
+import {Router} from "@angular/router";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-market',
   templateUrl: './market.component.html',
   styleUrls: ['./market.component.scss']
 })
-export class MarketComponent implements OnInit, OnDestroy {
+export class MarketComponent implements OnInit {
 
   private marketModel;
-  private marketIntervall;
   private nameObject: Object;
 
-  constructor(private ccs: CryptoCompareService, private cs: CoinsimService ) {
+  constructor(private router : Router, private ccs: CryptoCompareService, private cs: CoinsimService ) {
+
+        const array = this.cs.currencies().subscribe(currencies => {
+          const temp = {}
+          currencies.forEach(element => {
+            if (element.name !== 'US Dollar') {
+              temp[element.sym] = element.name;
+            }
+          });
+          this.nameObject = temp;
+          this.getMarketModel();
+          setInterval(() => {
+            this.getMarketModel()
+          }, 6000);
+        });
+        
+
+
+    
+    console.log(router.isActive('market', true));
+
+
   }
 
-  /**
-   * Use Cryprocompare Service to get
-   * Info from currencies
-   * On Success => onMarketSuccess()
-   */
   getMarketModel() {
-    console.log('MarketModel called');
     this.ccs.multiCryptoPrice(
       Object.keys(this.nameObject).join(','), 'USD',
       null, 'coinsim', null, null, true)
@@ -34,11 +50,6 @@ export class MarketComponent implements OnInit, OnDestroy {
       );
   }
 
-  /**
-   * add styling properties to data received
-   * bind model to table
-   * @param Success JSON Object : Data
-   */
   onMarketModelSuccess(Success: Object) {
     if (Success.hasOwnProperty('RAW')) {
       const newModel = Success['RAW'];
@@ -62,66 +73,37 @@ export class MarketComponent implements OnInit, OnDestroy {
                 oldCurrency = currency;
               }
             });
-            
+
             Object.keys(newModel[k].USD).map(j => {
+              // console.log(newModel[k].USD[j], oldCurrency.USD[j]);
               if (Number(newModel[k].USD[j])) {
+                // console.log(oldCurrency.USD[j] < newModel[k].USD[j], newModel[k].USD[j], oldCurrency.USD[j])
 
                 // old is smaller
                 if (newModel[k].USD[j] > oldCurrency.USD[j]) {
                   const flashValue = j + 'FLASH';
                   newModel[k][flashValue] = 'flash-green';
+                  console.log(newModel[k]);
                 }
 
                 // old is bigger
                 if (newModel[k].USD[j] < oldCurrency.USD[j]) {
                   const flashValue = j + 'FLASH';
                   newModel[k][flashValue] = 'flash-red';
+                  console.log(newModel[k]);
                 }
 
               }
             })
           }
+
           return newModel[k];
       });
     }
   }
 
-  
-
-  /**
-   * Get supported currencies
-   * format currencies for request
-   * set intervall in private var to call Market Model
-   */
   ngOnInit() {
-    this.cs.currencies().subscribe(
-      (Success) => {
-        const array = Success.json();
-        const temp = {}
-        array.forEach(element => {
-          if (element.name !== 'US Dollar') {
-            temp[element.sym] = element.name;
-          }
-        });
-        this.nameObject = temp;
-        this.getMarketModel();
-        
-        this.marketIntervall = setInterval(() => {
-          this.getMarketModel()
-        }, 6000);
 
-      },
-      (Error) => alert('failed to connect to coinsim api')
-    );
-  }
-
-  /**
-   * On exit Market kill intervall
-   */
-  ngOnDestroy() {
-    if (this.marketIntervall) {
-      clearInterval(this.marketIntervall);
-    }
   }
 
 }
