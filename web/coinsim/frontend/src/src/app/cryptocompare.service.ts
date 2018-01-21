@@ -8,25 +8,18 @@ import 'rxjs/add/operator/map'
 export class CryptoCompareService {
   private baseURL = 'https://min-api.cryptocompare.com/data/';
 
-  private currencies: Array<Currency>;
+  private currencyMap: any;
 
   constructor(private http: Http, private cs: CoinsimService) {
         // onInit, get current supported currencies
-        cs.currencies().subscribe(currencies => {
-            this.currencies = currencies
-            console.log('cryptocompare service', this.currencies);
+        cs.currencyMap().subscribe(currencies => {
+            this.currencyMap = currencies
+            console.log('cryptocompare service', this.currencyMap);
         })
         
    }
 
 
-   /**
-    * helper function
-    * return currencies in string for requests
-    */
-   currenciesToString() {
-       let currencies = this.currencies;
-   }
 
     /**
    * https://www.cryptocompare.com/api#-api-data-price-

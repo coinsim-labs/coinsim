@@ -17,17 +17,11 @@ export class MarketComponent implements OnInit {
 
   constructor(private router : Router, private ccs: CryptoCompareService, private cs: CoinsimService ) {
 
-        const array = this.cs.currencies().subscribe(currencies => {
-          const temp = {}
-          currencies.forEach(element => {
-            if (element.name !== 'US Dollar') {
-              temp[element.sym] = element.name;
-            }
-          });
-          this.nameObject = temp;
+        const array = this.cs.currencyMap().subscribe(currencies => {
+          this.nameObject = currencies;
           this.getMarketModel();
           setInterval(() => {
-            this.getMarketModel()
+            //this.getMarketModel()
           }, 6000);
         });
         
@@ -83,14 +77,14 @@ export class MarketComponent implements OnInit {
                 if (newModel[k].USD[j] > oldCurrency.USD[j]) {
                   const flashValue = j + 'FLASH';
                   newModel[k][flashValue] = 'flash-green';
-                  console.log(newModel[k]);
+                  // console.log(newModel[k]);
                 }
 
                 // old is bigger
                 if (newModel[k].USD[j] < oldCurrency.USD[j]) {
                   const flashValue = j + 'FLASH';
                   newModel[k][flashValue] = 'flash-red';
-                  console.log(newModel[k]);
+                  // console.log(newModel[k]);
                 }
 
               }

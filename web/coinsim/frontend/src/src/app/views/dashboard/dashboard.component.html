@@ -1,6 +1,21 @@
 <div class="animated fadeIn">
-  <div class="container p-3 bg-white">
-    <h1>Welcome {{username}}</h1>
-    <h4>Happy Trading</h4>
-  </div>
+  <div class="container p-2">
+
+      <div class="card">
+          <div  class="card-body">
+            <div class="row">
+              <div class="col-sm-5">
+                <h4 class="card-title mb-0">Welcome to Coinsim</h4>
+                <div class="small text-muted">Logged in as {{username}}</div>
+              </div>
+              
+            </div>
+    
+          </div>
+          
+        </div>
+
+      <app-cryptodaychart *ngIf="currencies" [currencies]="currencies"></app-cryptodaychart>
+
+</div>
 </div>

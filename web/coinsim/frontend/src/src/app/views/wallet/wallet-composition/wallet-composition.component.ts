@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CoinsimService } from '../../../coinsim.service';
 import { CryptoCompareService } from '../../../cryptocompare.service';
 import { Chart } from 'angular-highcharts';
@@ -9,10 +9,11 @@ import 'rxjs/add/operator/switchMap';
 @Component({
   selector: 'app-wallet-composition',
   templateUrl: './wallet-composition.component.html',
-  styleUrls: ['./wallet-composition.component.scss'],
+  styleUrls: ['./wallet-composition.component.css'],
 })
 export class WalletCompositionComponent implements OnInit {
   
+  @Input() currency_map: any;
   balances: Observable<Balance[]>;
   chart: Chart;
   

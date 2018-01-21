@@ -1,0 +1,7 @@
+.row i {
+    font-size: 25px;
+    margin-left: 13px;
+  }
+.row .col-sm-5 {
+    display: inline-block;
+}

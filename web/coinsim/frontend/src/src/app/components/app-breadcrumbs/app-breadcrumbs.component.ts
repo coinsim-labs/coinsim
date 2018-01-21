@@ -29,13 +29,9 @@ export class AppBreadcrumbsComponent {
       let currentRoute = this.route.root,
       url = '';
 
-      this.cs.currencies().subscribe(currencies => {
-        currencies.forEach(c => {
-            this.currencies[c.sym.toLowerCase()] = c.name;
-         });
+      this.cs.currencyMap().subscribe(currencies => {
+        this.currencies = currencies
         
-         let curr = this.currencies;
-
          do {
           const childrenRoutes = currentRoute.children;
           currentRoute = null;
@@ -48,7 +44,7 @@ export class AppBreadcrumbsComponent {
               //console.log(this.currencies['BTC'])
               let label = {}
               if (routeSnapshot.params.currency) {
-                label = {title: this.currencies[routeSnapshot.params.currency.toLowerCase()]}
+                label = {title: this.currencies[routeSnapshot.params.currency]['name']}
               } else {
                 label = route.snapshot.data
               }

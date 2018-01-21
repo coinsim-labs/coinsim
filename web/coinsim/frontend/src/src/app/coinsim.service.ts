@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs';
-//import 'rxjs/add/operator/map'
-import { map } from 'rxjs/operators';
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/reduce'
+//import { map, reduce } from 'rxjs/operators';
 
 export class Currency {
     name: string;
@@ -22,15 +23,28 @@ export class CoinsimService {
     }
 
     /**
-     * Routerfunction to check if user logged in
-     * TODO: Should be with VERIFY TOKEN
+     * Get Header Header with JWT Token
      */
-    canActivate() {
-        if (localStorage.getItem('currentUser')) {
-            return true;
-        } else {
-            return false;
-        }
+    getHeaders() {
+        const headers = new Headers();
+        headers.append('Authorization', 'JWT ' + this.token);
+        return headers;
+    }
+
+    /**
+     * Routerfunction to check if user logged in
+     */
+    canActivate(): any {
+        const token = this.token;
+        return this.http.post('/api/v1/auth/token-verify/', {'token' : token})
+        .map((response: Response) => {
+            console.log('Response', response.json());
+            if (response.json().token) {
+                return true;
+            } else {
+                return false;
+            }
+        })
     }
 
     /**
@@ -94,26 +108,31 @@ export class CoinsimService {
     }
   
     transactions() {
-      const headers = new Headers();
-      headers.append('Authorization', 'JWT ' + this.token);
-      return this.http.get('/api/v1/user/transactions/', {headers: headers})
+        const headers = this.getHeaders();
+        return this.http.get('/api/v1/user/transactions/', {headers: headers})
             .map((response: Response) => response.json());
     }
   
-    balances() {
+    balances(): Observable<any> {
       const headers = new Headers();
       headers.append('Authorization', 'JWT ' + this.token);
       return this.http.get('/api/v1/user/balances/', {headers: headers})
             .map((response: Response) => response.json());
     }
 
-    protected _currencies: Array<Currency>;
+    protected _currencies: any;
 
     /**
      * Observable of supported Currencies. 
      * If called initially or refresh is true, an api call is issued.
+     * Returns an object of type {SYM: {name: 'Currency', sym: 'SYM'}, ...}
      */
-    public currencies(refresh?: boolean): Observable<Array<Currency>> {
+    currencies() {
+        return this.http.get('/api/v1/trade/currencies/')
+            .map((response: Response) => response.json());
+    }
+    
+    public currencyMap(refresh?: boolean): Observable<any> {
         return new Observable(observer => {
             if (this._currencies) {
               observer.next(this._currencies);
@@ -122,9 +141,14 @@ export class CoinsimService {
             this.http
               .get('/api/v1/trade/currencies/')
               .map((r: Response) => (r.json() as Array<Currency>))
-              .subscribe((currencies: Array<Currency>) => {
-                this._currencies = currencies;
-                observer.next(currencies);
+              .subscribe((currencyMap: any) => {
+                this._currencies = currencyMap
+                    .filter(currency => currency['sym'] != 'USD')
+                    .reduce((obj, currency) => {
+                        obj[currency['sym']] = currency;
+                        return obj
+                }, {});
+                observer.next(this._currencies);
                 observer.complete();
               });
           });

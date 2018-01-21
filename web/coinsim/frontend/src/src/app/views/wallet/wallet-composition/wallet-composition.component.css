@@ -1,0 +1,11 @@
+tr td:nth-child(1) span {
+    font-weight: 500;
+    text-align: left;
+    font-size: 1rem;
+    color: #463f3f;
+}
+
+tr td:nth-child(1) img {
+    width: 22px;
+    margin-right: 12px;
+  }
