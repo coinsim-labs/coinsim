@@ -18,7 +18,9 @@
           <tr *ngFor="let currency of marketModel" [routerLink]="[currency.NAME]">
             
             <td class={{currency.NAMEFLASH}}>
-              <img src="assets/img/crypto-icons/{{currency.NAME | lowercase}}.png" />{{nameObject[currency.NAME]}}
+              <p>
+                <img src="assets/img/crypto-icons/{{currency.NAME | lowercase}}.png" />{{nameObject[currency.NAME].name}}
+              </p><span>{{nameObject[currency.NAME].sym}}</span>
             </td>
             <td class={{currency.PRICEFLASH}}><p>{{currency.USD.PRICE | number}} $</p><span class="{{currency.USD.CLASS}} percent">{{currency.USD.CHANGEPCT24HOUR | number : '1.2-2'}} %</span></td>
             <td class={{currency.MKTCAPFLASH}}>{{currency.USD.MKTCAP | number : '1.0-0'}} $</td>

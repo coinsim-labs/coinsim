@@ -1,6 +1,14 @@
 <div class="animated fadeIn">
-  <div class="container p-3 bg-white">
+  <div class="container p-2">
+
+      <div class="container-fluid mb-3 p-2 bg-white">
     <h1>Welcome {{username}}</h1>
     <h4>Happy Trading</h4>
-  </div>
+      </div>
+
+    <div class="container-fluid mb-3 p-2 bg-white">
+      <app-cryptodaychart *ngIf="currencies" [currencies]="currencies"></app-cryptodaychart>
+    </div>
+
+</div>
 </div>

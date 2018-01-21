@@ -1,14 +1,14 @@
-<div *ngIf="this.currencies.length > 1" class="chooser">
+<div *ngIf="this.currencies.length > 1 && currency_map" class="chooser">
        <div *ngFor="let currency of currencies" 
-            class="currency {{currency.sym}}" 
-            [ngClass]="{ 'nselected': currency != selected }"
-            [style.border-bottom]="'solid 1px '+cryptocolors[currency.sym]"
-            (click)="select(currency)">
-                <i class="cc {{currency.sym}}"  [ngClass]="{ 'nselected': currency != selected }"></i>
-                {{currency.name}}
+            class="currency {{currency_map[currency].sym}}" 
+            [ngClass]="{ 'nselected': currency_map[currency] != selected }"
+            [style.border-bottom]="'solid 1px '+cryptocolors[currency_map[currency].sym]"
+            (click)="select(currency_map[currency])">
+                <i class="cc {{currency_map[currency].sym}}"  [ngClass]="{ 'nselected': currency_map[currency] != selected }"></i>
+                {{currency_map[currency].name}}
        </div>
 </div>
-<div class="ticker">
+<div class="ticker" *ngIf="selected">
     <div>
         <div class="label">{{selected.name}} price</div>
         <div *ngIf="price_now" class="price">{{price_now | number:'.2-2'}} $</div>

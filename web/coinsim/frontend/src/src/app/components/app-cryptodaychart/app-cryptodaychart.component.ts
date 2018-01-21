@@ -3,6 +3,7 @@ import { Chart, StockChart } from 'angular-highcharts';
 import { CryptoCompareService } from '../../cryptocompare.service';
 import { Currency } from '../../coinsim.service';
 import { colors } from '../../cryptocolors';
+import { CoinsimService } from '../../coinsim.service';
 
 @Component({
   selector: 'app-cryptodaychart',
@@ -11,7 +12,8 @@ import { colors } from '../../cryptocolors';
 })
 export class AppCryptoDayChartComponent implements OnInit {
   
-    @Input() currencies: Array<Currency>;
+    @Input() currencies: any;
+    currency_map: any;
 
     chart: StockChart;
     cryptocolors: any;
@@ -24,11 +26,12 @@ export class AppCryptoDayChartComponent implements OnInit {
 
     month_range: number;
 
-  constructor(private ccs: CryptoCompareService) {
+  constructor(private ccs: CryptoCompareService, private cs: CoinsimService ) {
     
     this.month_range = 3;
     this.cryptocolors = colors;
 
+    
     this.chart = new StockChart({
       chart: {
         height: 300,
@@ -139,13 +142,19 @@ export class AppCryptoDayChartComponent implements OnInit {
    }
 
   ngOnInit() {
-    if (this.currencies.length == 1) {
+    this.cs.currencyMap().subscribe((currencies) => {
+        this.currency_map = currencies;
         let c = this.currencies[0]
-        this.chart.options.title = {text: c.name}
-        this.chart.options.subtitle = {text: c.sym}
-    }
 
-    this.select(this.currencies[0])
+        if (this.currencies.length == 1) {
+            this.chart.options.title = {text: this.currency_map[c].name}
+            this.chart.options.subtitle = {text: this.currency_map[c].sym}
+        }
+    
+        this.select(this.currency_map[c])
+    });
+
+
   }
 
   selectRange = (e: any) => {
