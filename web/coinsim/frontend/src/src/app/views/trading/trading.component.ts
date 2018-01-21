@@ -15,7 +15,7 @@ export class TradingComponent implements OnInit {
   private model = {
     trading: {
       buy: [],
-      sell: [], 
+      sell: [],
     },
     exchange: {
 
@@ -34,15 +34,15 @@ export class TradingComponent implements OnInit {
 
   ngOnInit() {
     this.cs.balances().subscribe((balanceResult) => {
-      Object.keys(balanceResult).forEach(function(key) {
+      Object.keys(balanceResult).forEach(function (key) {
         balanceResult[key].selected = false;
-        });
+      });
       this.model.wallet.currencies = balanceResult;
     });
     this.cs.currencies().subscribe((currenciesResult) => {
-      Object.keys(currenciesResult).forEach(function(key) {
+      Object.keys(currenciesResult).forEach(function (key) {
         currenciesResult[key].selected = false;
-        });
+      });
       this.model.bank.currencies = currenciesResult;
     })
   }
@@ -84,18 +84,18 @@ export class TradingComponent implements OnInit {
 
     if (targetModel === 'buy') {
       if (buyLength === 0) { return true; }
-      if (buyLength > 0 ) {
-        if (sellLength <= 1 ) { return true; }
+      if (buyLength > 0) {
+        if (sellLength <= 1) { return true; }
         return false;
-      } 
+      }
     }
 
     if (targetModel === 'sell') {
       if (sellLength === 0) { return true; }
-      if (sellLength > 0 ) {
-        if (buyLength <= 1 ) { return true; }
+      if (sellLength > 0) {
+        if (buyLength <= 1) { return true; }
         return false;
-      } 
+      }
     }
   }
 
@@ -123,10 +123,10 @@ export class TradingComponent implements OnInit {
       const sym = item.currency;
       let sellModel = this.model.trading.sell;
       sellModel = sellModel.filter((el) => {
-          return el.sym !== sym;
-        }
+        return el.sym !== sym;
+      }
       );
-      
+
       this.model.trading.sell = sellModel;
     }
     item.selected = !item.selected;
@@ -143,10 +143,10 @@ export class TradingComponent implements OnInit {
       // add item to buymodel
       const allowed = this.canAddTradingObject('buy');
       if (!allowed) { return; }
-      
+
       const length = this.model.trading.buy.length + 1;
       this.model.trading.buy.forEach(element => {
-          element.percent = 100 / length;
+        element.percent = 100 / length;
       });
 
       const currency = {
@@ -161,10 +161,15 @@ export class TradingComponent implements OnInit {
       const sym = item.sym;
       let buyModel = this.model.trading.buy;
       buyModel = buyModel.filter((el) => {
-          return el.sym !== sym;
-        }
+        return el.sym !== sym;
+      }
       );
-      
+
+      const length = this.model.trading.buy.length - 1;
+      this.model.trading.buy.forEach(element => {
+        element.percent = 100 / length;
+      });
+
       this.model.trading.buy = buyModel;
     }
     item.selected = !item.selected;
@@ -182,20 +187,24 @@ export class TradingComponent implements OnInit {
   /**
    * Called when slider from BuyItem changing
    * calculate new percentamount for each 
-   * @param value 
-   * @param item 
+   * @param value new Percent as int (90% = 90)
+   * @param item item in model
    */
   onPercentChanges(value, item) {
-    const numberOfItems = this.model.trading.buy.length - 1;
-    const items = this.model.trading.buy;
-    const delta = value - item.percent; 
-    item.percent = item.value;
-    
-    items.forEach(element => {
-      if (element.sym !== item.sym) {
-        element.percent += (delta / numberOfItems);
-      }
-    });
+    if (!isNaN(value)) {
+      const items = this.model.trading.buy;
+      const numberOfItems = items.length - 1;
+      const delta = value - item.percent;
+      const x = delta / numberOfItems;
+
+      items.forEach(element => {
+        if (element.sym !== item.sym) {
+          element.percent = element.percent - x;
+        }
+      });
+
+      item.percent = value;
+    }
   }
 
   /**
@@ -215,7 +224,7 @@ export class TradingComponent implements OnInit {
     if (item.balance < newValue) {
       event.srcElement.value = item.balance;
       newValue = item.balance;
-    } 
+    }
     if (newValue < 0) {
       event.srcElement.value = 0;
       newValue = 0;
@@ -252,7 +261,7 @@ export class TradingComponent implements OnInit {
   /**
    * sets new exchangemodel
    * and calls updatefunction for Buy Objects
-   * @param Success 
+   * @param Success Horray
    */
   onExchangeModelSuccess(Success: Object) {
     if (Success.hasOwnProperty('RAW')) {
@@ -281,8 +290,8 @@ export class TradingComponent implements OnInit {
       null, 'coinsim', null, null, true)
       .map(result => result)
       .subscribe(
-        (Success) => {this.onExchangeModelSuccess(Success)},
-        (Error) => {console.log(Error); alert('Failed to get ExchangeRates')}
+      (Success) => { this.onExchangeModelSuccess(Success) },
+      (Error) => { console.log(Error); alert('Failed to get ExchangeRates') }
       );
   }
 
