@@ -19,7 +19,7 @@ export class BalanceHistoryComponent implements OnInit {
 
   constructor(private coinsimService: CoinsimService, private cryptoService: CryptoCompareService) { }
 
-  buildChart(series) {
+  buildChart(series, transactions) {
     this.chart = new Chart({
       chart: {
         type: 'area'
@@ -41,18 +41,12 @@ export class BalanceHistoryComponent implements OnInit {
         },
         formatter: function() {
           const currencyName = this.point.series.name;
-          let hasTransaction = false;
-          /*
-          for (const timestamp in transactions[currencyName]) {
-            if (parseInt(timestamp,10) === this.x) {
-              hasTransaction = true;
-            }
+          if(this.hasTransaction(currencyName, this.x, transactions)) {
+            return false;
+
+          } else {
+            return false;
           }
-          */
-          if(hasTransaction) {
-            return "";
-          }
-          return false;
         },
         crosshairs: [{
             width: 1,
@@ -272,7 +266,7 @@ export class BalanceHistoryComponent implements OnInit {
             series.push(lineData);
           }
         }
-        this.buildChart(series);
+        this.buildChart(series, transactions);
       });
     });
   }
