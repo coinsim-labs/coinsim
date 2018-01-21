@@ -81,6 +81,7 @@ import { WalletComponent } from './views/wallet/wallet.component';
 import { BalanceHistoryComponent } from './views/wallet/balance-history/balance-history.component';
 import { WalletCompositionComponent } from './views/wallet/wallet-composition/wallet-composition.component';
 import { MarketComponent } from './views/market/market.component';
+import { PriceSparklinesComponent } from './views/market/price-sparklines/price-sparklines.component';
 import { HistoryComponent } from './views/history/history.component';
 import { HistoryTableComponent } from './views/history/history-table/history-table.component';
 import { TradingComponent } from './views/trading/trading.component';
