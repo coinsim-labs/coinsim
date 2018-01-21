@@ -9,15 +9,17 @@ import * as $ from 'jquery'; // SORRY :(
 })
 export class TradingComponent implements OnInit {
 
-  private tradingModel = {
-    sell: [],
-    buy: []
-  }
-  private walletModel = {
-    currencies: []
-  };
-  private bankModel = {
-    currencies: []
+  private model = {
+    trading: {
+      buy: [],
+      sell: []
+    },
+    wallet: {
+      currencies: []
+    },
+    bank: {
+      currencies: []
+    }
   };
 
   constructor(private cs: CoinsimService) {
@@ -26,10 +28,10 @@ export class TradingComponent implements OnInit {
 
   ngOnInit() {
     this.cs.balances().subscribe((balanceResult) => {
-      this.walletModel.currencies = balanceResult;
+      this.model.wallet.currencies = balanceResult;
     });
     this.cs.currencies().subscribe((currenciesResult) => {
-      this.bankModel.currencies = currenciesResult;
+      this.model.bank.currencies = currenciesResult;
     })
   }
 
@@ -78,7 +80,7 @@ export class TradingComponent implements OnInit {
       'amount': item.amount
     };
 
-    this.tradingModel.sell.push(currency)
+    this.model.trading.sell.push(currency)
   }
 
   /**
@@ -93,7 +95,7 @@ export class TradingComponent implements OnInit {
       'name': item.name,
       'sym': item.sym
     };
-    this.tradingModel.buy.push(currency);
+    this.model.trading.buy.push(currency);
   }
 
   /**
@@ -152,8 +154,8 @@ export class TradingComponent implements OnInit {
    * empties all models
    */
   reset() {
-    this.tradingModel.sell = [];
-    this.tradingModel.buy = [];
+    this.model.trading.sell = [];
+    this.model.trading.buy = [];
   }
 
 }

@@ -4,7 +4,7 @@
       <div class="col">
         <h5>Wallet</h5>
         <ul class="wallet-list">
-          <li *ngFor="let item of walletModel.currencies" class="wallet-item" (click)="createSellObject($event.target, item)">
+          <li *ngFor="let item of model.wallet.currencies" class="wallet-item" (click)="createSellObject($event.target, item)">
             <img src="assets/img/crypto-icons/{{item.currency | lowercase}}.png" alt="btc-icon">
             <div>
               <span class="title">{{item.currency}}</span>
@@ -19,7 +19,7 @@
             <h3>Trading Area</h3>
             <div class="trading-area col-12">
               <ul class="wallet-trading-list">
-                <li *ngFor="let item of tradingModel.sell" class="trading-item">
+                <li *ngFor="let item of model.trading.sell" class="trading-item">
                   <div class="container-name">
                     <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="btc-icon">
                     <input id="{{item.sym}}WalletInput" (keyup)="onInputChange($event, item, 'Wallet')" type="number" min="0" max="{{item.balance}}"
@@ -36,7 +36,7 @@
                     <i class="fa fa-exchange" aria-hidden="true"></i>
                 </span></div>
               <ul class="bank-trading-list">
-                <li *ngFor="let item of tradingModel.buy" class="trading-item">
+                <li *ngFor="let item of model.trading.buy" class="trading-item">
                   <div class="container-name">
                     <span class="title">{{item.sym}}</span>
                     <input id="{{item.sym}}BankInput" (keyup)="onInputChange($event, item, 'Bank')" type="number" min="0" max="{{item.balance}}"
@@ -68,7 +68,7 @@
       <div class="col">
         <h5>Bank</h5>
         <ul class="bank-list">
-          <li *ngFor="let item of bankModel.currencies" class="bank-item" (click)="createBuyObject($event.target, item)">
+          <li *ngFor="let item of model.bank.currencies" class="bank-item" (click)="createBuyObject($event.target, item)">
             <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="{{item.sym | lowercase}}-icon">
             <div>
               <span class="title">{{item.name}}</span>
