@@ -94,6 +94,7 @@ export class MarketComponent implements OnInit {
           return newModel[k];
       });
     }
+    console.log(this.marketModel);
   }
 
   ngOnInit() {
