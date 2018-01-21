@@ -11,10 +11,14 @@
               </thead>
               <tbody>
                 <tr *ngFor="let balance of balances | async">
-		          <td>{{balance.currency}}</td>
-		          <td>{{balance.amount}}</td>
-		          <td>{{balance.inUSD}}</td>
-		        </tr>
+                  <td><img *ngIf="balance.currency != 'USD'" src="assets/img/crypto-icons/{{balance.currency | lowercase}}.png" />
+                    <span>
+                      {{balance.currency == 'USD' ? 'Dollar' : currency_map[balance.currency].name}}
+                    </span> ({{balance.currency }})
+                  </td>
+                  <td>{{balance.amount}}</td>
+                  <td>{{balance.inUSD}}</td>
+		          </tr>
               </tbody>
             </table>
           </div>

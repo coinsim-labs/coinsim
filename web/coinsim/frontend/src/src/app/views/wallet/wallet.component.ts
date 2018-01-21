@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CoinsimService } from '../../coinsim.service';
 
 @Component({
   selector: 'app-wallet',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WalletComponent implements OnInit {
 
-  constructor() { }
+  currency_map: any;
+  
+  constructor(private coinsimService: CoinsimService,) { }
 
   ngOnInit() {
+    this.coinsimService.currencyMap().subscribe((currencies) => {
+      this.currency_map = currencies;
+    });
   }
 
 }

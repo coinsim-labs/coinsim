@@ -3,7 +3,7 @@
 
 
 
-   <app-wallet-composition></app-wallet-composition>
+   <app-wallet-composition *ngIf="currency_map" [currency_map]='currency_map' ></app-wallet-composition>
 
     <div class="container-fluid mb-3 p-2 bg-white">
       <div class="row">
