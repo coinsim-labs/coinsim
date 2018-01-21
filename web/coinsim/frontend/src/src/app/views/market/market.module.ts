@@ -9,6 +9,7 @@ import { MarketRoutingModule } from './market-routing.module';
 import { DetailComponent } from '../market-detail/detail.component';
 import { AppCryptoDayChartComponent } from './../../components';
 import { AppCryptoDayChartModule } from '../../components/app-cryptodaychart/app-cryptodaychart.module'
+import { PriceSparklinesComponent } from './price-sparklines/price-sparklines.component';
 
 export function highchartsModules() {
   // apply Highcharts Modules to this array
@@ -21,15 +22,16 @@ export function highchartsModules() {
 //    ChartsModule
     ChartModule,
     CommonModule,
-    AppCryptoDayChartModule
+    AppCryptoDayChartModule,
+    PriceSparklinesComponent
   ],
-  declarations: [ 
+  declarations: [
     //MarketComponent,
-    DetailComponent,
+    DetailComponent, PriceSparklinesComponent,
     //AppCryptoDayChartComponent
   ],
   providers: [
-    { provide: HIGHCHARTS_MODULES, useFactory: highchartsModules } 
+    { provide: HIGHCHARTS_MODULES, useFactory: highchartsModules }
   ]
 })
 export class MarketModule { }
