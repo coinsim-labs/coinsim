@@ -21,6 +21,8 @@
         "../node_modules/simple-line-icons/css/simple-line-icons.css",
         "../node_modules/ion-rangeslider/css/ion.rangeSlider.css",
         "../node_modules/ion-rangeslider/css/ion.rangeSlider.skinFlat.css",
+        "../node_modules/cryptocoins-icons/webfont/cryptocoins.css",
+        "../node_modules/cryptocoins-icons/webfont/cryptocoins-colors.css",
         "scss/style.scss"
       ],
       "scripts": [

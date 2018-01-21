@@ -1,0 +1,78 @@
+.chooser {
+    padding: 10px 10px 0 10px;
+    border-bottom: solid 1px #e4e5e6;
+    margin-bottom: 16px;
+}
+
+.currency {
+    display: inline-block;
+    padding: 7px 13px;
+    
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.currency.nselected {
+    color: #7c7c7c !important;
+    border: none !important;
+}
+
+
+
+.currency.nselected:hover {
+    border-bottom: solid 1px #45b29d9e !important;
+}
+
+i {
+    
+    margin: 0 5px 0 0px;
+}
+
+i.nselected {
+    color: #c5c5c5 !important;
+}
+
+
+.ticker {
+    text-align: center;
+    margin-top: 33px;
+}
+
+.ticker > div {
+    display: inline-block;
+    text-align: center;
+    margin-right: 26px;
+    padding-left: 26px;
+}
+.ticker > div:nth-child(1) {
+    width: 170px;
+}
+.ticker > div:nth-child(2) {
+    border-left: solid 1px lightgrey;
+    width: 200px;
+}
+
+.label {
+    text-transform: uppercase;
+    color: grey;
+    font-size: 14px;
+}
+
+.price {
+    color: #656565;
+    font-size: 24px;
+    display: inline-block;
+}
+
+.percentage {
+    display: inline-block;
+    border: solid 1px lightgrey;
+    border-radius: 4px;
+    color: #b3b3b3;
+    padding: 0px 5px;
+}
+
+.spacer {
+    display: flex
+}
+

@@ -77,6 +77,7 @@ import { MarketComponent } from './views/market/market.component';
 import { HistoryComponent } from './views/history/history.component';
 import { HistoryTableComponent } from './views/history/history-table/history-table.component';
 import { TradingComponent } from './views/trading/trading.component';
+import { AppCryptoDayChartComponent } from './components';
 
 @NgModule({
   imports: [
@@ -92,6 +93,7 @@ import { TradingComponent } from './views/trading/trading.component';
     ...APP_CONTAINERS,
     ...APP_COMPONENTS,
     ...APP_DIRECTIVES,
+    MarketComponent,
   ],
   providers: [
     CoinsimService,

@@ -1,0 +1,23 @@
+<div *ngIf="this.currencies.length > 1 && currency_map" class="chooser">
+       <div *ngFor="let currency of currencies" 
+            class="currency {{currency_map[currency].sym}}" 
+            [ngClass]="{ 'nselected': currency_map[currency] != selected }"
+            [style.border-bottom]="'solid 1px '+cryptocolors[currency_map[currency].sym]"
+            (click)="select(currency_map[currency])">
+                <i class="cc {{currency_map[currency].sym}}"  [ngClass]="{ 'nselected': currency_map[currency] != selected }"></i>
+                {{currency_map[currency].name}}
+       </div>
+</div>
+<div class="ticker" *ngIf="selected">
+    <div>
+        <div class="label">{{selected.name}} price</div>
+        <div *ngIf="price_now" class="price">{{price_now | number:'.2-2'}} $</div>
+        <div class="spacer"></div>
+    </div>
+    <div *ngIf="month_range">
+            <div class="label">Since last {{(month_range == 1) ? 'month': (month_range < 12) ? month_range + ' months': 'year' }}</div>
+            <div *ngIf="price_delta" class="price">{{(price_delta > 0 ? '+' : '')}}{{price_delta | number:'.2-2'}} $</div>
+            <div *ngIf="price_percentage" class="percentage">{{(price_percentage > 0 ? '+' : '')}}{{price_percentage | number:'.2-2'}} %</div>
+            </div>
+    </div>
+<div class="linechart" [chart]="chart"></div>
