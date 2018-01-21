@@ -55,8 +55,10 @@ h5 {
     cursor: pointer;
   }
 
-  &:active {
-    background:#a4b7c1;;
+  &:active,
+  &.selected {
+    background:#a4b7c1;
+    box-shadow: none;
   }
 }
 

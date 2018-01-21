@@ -12,7 +12,7 @@ export class TradingComponent implements OnInit {
   private model = {
     trading: {
       buy: [],
-      sell: []
+      sell: [],
     },
     wallet: {
       currencies: []
@@ -28,9 +28,15 @@ export class TradingComponent implements OnInit {
 
   ngOnInit() {
     this.cs.balances().subscribe((balanceResult) => {
+      Object.keys(balanceResult).forEach(function(key) {
+        balanceResult[key].selected = false;
+        });
       this.model.wallet.currencies = balanceResult;
     });
     this.cs.currencies().subscribe((currenciesResult) => {
+      Object.keys(currenciesResult).forEach(function(key) {
+        currenciesResult[key].selected = false;
+        });
       this.model.bank.currencies = currenciesResult;
     })
   }
@@ -63,6 +69,7 @@ export class TradingComponent implements OnInit {
   /**
    * checks that there is always a 1:n or n:1 relationship between 
    * model.trading.buy and model.trading.sell
+   * returns boolean
    * @param targetModel 'buy' or 'sell'
    */
   canAddTradingObject(targetModel) {
@@ -94,22 +101,31 @@ export class TradingComponent implements OnInit {
    * @param item  model of that item
    */
   createSellObject(target, item) {
-
-    const allowed = this.canAddTradingObject('sell');
-    if (!allowed) { return; }
-
-
-    const listElement = this.getListElement(target);
-    listElement.className += ' selected';
-
-    const currency = {
-      'name': 'PLACEHOLDER',
-      'sym': item.currency,
-      'balance': item.amount,
-      'amount': item.amount
-    };
-
-    this.model.trading.sell.push(currency)
+    if (!item.selected) {
+      // add item to tradingmodel
+      const allowed = this.canAddTradingObject('sell');
+      if (!allowed) { return; }
+      const listElement = this.getListElement(target);
+      const currency = {
+        'name': 'PLACEHOLDER',
+        'sym': item.currency,
+        'balance': item.amount,
+        'amount': item.amount
+      };
+      this.model.trading.sell.push(currency);
+      item.selected = true;
+    } else {
+        // remove item from tradingmodel
+        const sym = item.currency;
+        let sellModel = this.model.trading.sell;
+        sellModel = sellModel.filter((el) => {
+            return el.sym !== sym;
+          }
+        );
+        
+        this.model.trading.sell = sellModel;
+        item.selected = false;
+    }
   }
 
   /**
@@ -120,28 +136,39 @@ export class TradingComponent implements OnInit {
    * @param item  model of that item
    */
   createBuyObject(target, item) {
+    if (!item.selected) {
+      // add item to buymodel
+      const allowed = this.canAddTradingObject('buy');
+      if (!allowed) { return; }
 
-    const allowed = this.canAddTradingObject('buy');
-    if (!allowed) { return; }
-
-    const currency = {
-      'name': item.name,
-      'sym': item.sym
-    };
-    this.model.trading.buy.push(currency);
+      const currency = {
+        'name': item.name,
+        'sym': item.sym
+      };
+      this.model.trading.buy.push(currency);
+      item.selected = true;
+    } else {
+      // remove item from boyModel
+      const sym = item.currency;
+      let buyModel = this.model.trading.sell;
+      buyModel = buyModel.filter((el) => {
+          return el.sym !== sym;
+        }
+      );
+      
+      this.model.trading.buy = buyModel;
+      item.selected = false;
+    }
   }
 
   /**
-   * Called when slider is changed
-   * updates input
-   * 
-   * @param event Sliderevent
-   * @param short Currency Short to identify input
-   * @param list in which list the clickevent happend
+   * Called when slider changes
+   * @param value new valuw
+   * @param item currency
    */
-  updateSlider(from, short, list) {
-    const input = $(this.getInputId(short, list));
-    input.val(from);
+  updateSlider(value, item) {
+    console.log(item, value)
+    item.amount = value;
   }
 
   /**
@@ -191,8 +218,9 @@ export class TradingComponent implements OnInit {
    * empties all models
    */
   reset() {
-    this.model.trading.sell = [];
-    this.model.trading.buy = [];
+    console.log(this.model);
+    // this.model.trading.sell = [];
+    // this.model.trading.buy = [];
   }
 
 }

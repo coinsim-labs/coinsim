@@ -4,7 +4,7 @@
       <div class="col">
         <h5>Wallet</h5>
         <ul class="wallet-list">
-          <li *ngFor="let item of model.wallet.currencies" class="wallet-item" (click)="createSellObject($event.target, item)">
+          <li *ngFor="let item of model.wallet.currencies" class="wallet-item" [ngClass]="{'selected': item.selected}" (click)="createSellObject($event.target, item)">
             <img src="assets/img/crypto-icons/{{item.currency | lowercase}}.png" alt="btc-icon">
             <div>
               <span class="title">{{item.currency}}</span>
@@ -23,12 +23,12 @@
                   <div class="container-name">
                     <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="btc-icon">
                     <input id="{{item.sym}}WalletInput" (keyup)="onInputChange($event, item, 'Wallet')" type="number" min="0" max="{{item.balance}}"
-                      step="0.001" value="{{item.balance}}">
+                      step="0.001" value="{{item.balance}}" [(ngModel)]="item.amount">
                     <span class="title">{{item.sym}}</span>
                   </div>
                   <div class="container-slider">
                     <ion-range-slider id="{{item.sym}}WalletSlider" type="single" step="0.0001" min="0" max="{{item.balance}}" from="{{item.balance}}"
-                      (onChange)="updateSlider($event.from, item.sym, 'Wallet')"></ion-range-slider>
+                      (onChange)="updateSlider($event.from, item)"></ion-range-slider>
                   </div>
                 </li>
               </ul>
@@ -68,7 +68,7 @@
       <div class="col">
         <h5>Bank</h5>
         <ul class="bank-list">
-          <li *ngFor="let item of model.bank.currencies" class="bank-item" (click)="createBuyObject($event.target, item)">
+          <li *ngFor="let item of model.bank.currencies" class="bank-item" [ngClass]="{'selected': item.selected}" (click)="createBuyObject($event.target, item)">
             <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="{{item.sym | lowercase}}-icon">
             <div>
               <span class="title">{{item.name}}</span>
