@@ -60,7 +60,31 @@ export class TradingComponent implements OnInit {
     return domElem;
   }
 
+  /**
+   * checks that there is always a 1:n or n:1 relationship between 
+   * model.trading.buy and model.trading.sell
+   * @param targetModel 'buy' or 'sell'
+   */
+  canAddTradingObject(targetModel) {
+    const sellLength = this.model.trading.sell.length;
+    const buyLength = this.model.trading.buy.length;
 
+    if (targetModel === 'buy') {
+      if (buyLength === 0) { return true; }
+      if (buyLength > 0 ) {
+        if (sellLength <= 1 ) { return true; }
+        return false;
+      } 
+    }
+
+    if (targetModel === 'sell') {
+      if (sellLength === 0) { return true; }
+      if (sellLength > 0 ) {
+        if (buyLength <= 1 ) { return true; }
+        return false;
+      } 
+    }
+  }
 
   /**
    * Called when item from wallet was selected
@@ -70,6 +94,11 @@ export class TradingComponent implements OnInit {
    * @param item  model of that item
    */
   createSellObject(target, item) {
+
+    const allowed = this.canAddTradingObject('sell');
+    if (!allowed) { return; }
+
+
     const listElement = this.getListElement(target);
     listElement.className += ' selected';
 
@@ -91,6 +120,10 @@ export class TradingComponent implements OnInit {
    * @param item  model of that item
    */
   createBuyObject(target, item) {
+
+    const allowed = this.canAddTradingObject('buy');
+    if (!allowed) { return; }
+
     const currency = {
       'name': item.name,
       'sym': item.sym
@@ -128,6 +161,10 @@ export class TradingComponent implements OnInit {
     if (item.balance < newValue) {
       event.srcElement.value = item.balance;
       newValue = item.balance;
+    } 
+    if (newValue < 0) {
+      event.srcElement.value = 0;
+      newValue = 0;
     }
 
     if (!sliderElement) {
