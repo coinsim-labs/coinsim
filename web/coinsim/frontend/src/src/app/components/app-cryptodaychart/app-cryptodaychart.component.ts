@@ -146,12 +146,10 @@ export class AppCryptoDayChartComponent implements OnInit {
         this.currency_map = currencies;
         let c = this.currencies[0]
 
-        if (this.currencies.length == 1) {
-            this.chart.options.title = {text: this.currency_map[c].name}
-            this.chart.options.subtitle = {text: this.currency_map[c].sym}
-        }
+        console.log(this.currency_map)
     
         this.select(this.currency_map[c])
+        console.log('c ', c)
     });
 
 
@@ -212,6 +210,7 @@ export class AppCryptoDayChartComponent implements OnInit {
   }
 
   select(currency: Currency) {
+      console.log('seelct....', currency)
       this.selected = currency;
       this.loadChart();
   }

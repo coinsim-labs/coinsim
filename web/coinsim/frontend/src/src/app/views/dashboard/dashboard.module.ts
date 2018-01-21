@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { AppCryptoDayChartComponent } from './../../components';
+import { AppCryptoDayChartModule } from '../../components/app-cryptodaychart/app-cryptodaychart.module'
 import stock from 'highcharts/modules/stock.src';
 import more from 'highcharts/highcharts-more.src';
 
@@ -15,12 +16,13 @@ export function highchartsModules() {
 @NgModule({
   imports: [
     DashboardRoutingModule,
-    ChartModule,
+    AppCryptoDayChartModule,
+    //ChartModule,
     CommonModule 
   ],
   declarations: [ 
     DashboardComponent, 
-    AppCryptoDayChartComponent
+    //AppCryptoDayChartComponent
   ],
   providers: [
     { provide: HIGHCHARTS_MODULES, useFactory: highchartsModules } 
