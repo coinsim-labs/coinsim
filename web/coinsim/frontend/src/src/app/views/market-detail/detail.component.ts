@@ -20,6 +20,7 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cs.refresh();
     this.cs.currencyMap().subscribe(currencies => {
       this.currency_map = currencies
     })

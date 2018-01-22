@@ -32,6 +32,8 @@ export class TradingComponent implements OnInit {
 
 
   ngOnInit() {
+    this.cs.refresh();
+
     this.cs.balances().subscribe((balanceResult) => {
       Object.keys(balanceResult).forEach(function (key) {
         balanceResult[key].selected = false;

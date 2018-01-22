@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Http, Headers, Response } from '@angular/http';
-import { Observable } from 'rxjs';
+import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/reduce'
 //import { map, reduce } from 'rxjs/operators';
@@ -31,6 +31,7 @@ export class CoinsimService {
         return headers;
     }
 
+    
     /**
      * Routerfunction to check if user logged in
      */
@@ -38,15 +39,18 @@ export class CoinsimService {
         const token = this.token;
         return this.http.post('/api/v1/auth/token-verify/', {'token' : token})
         .map((response: Response) => {
-            console.log('Response', response.json());
             if (response.json().token) {
                 return true;
             } else {
                 return false;
             }
+        }).catch((error: any) => {
+            console.log(error);
+            this.router.navigate(['pages/login']);
+            return false;
         })
     }
-
+    
     /**
      * Post for registering a new account
      * If successful safe token in localstorage
@@ -61,7 +65,7 @@ export class CoinsimService {
                     const token = response.json() && response.json().token;
                     if (token) {
                         this.token = token;
-                        localStorage.setItem('currentUser', JSON.stringify({username: username, token: token }));
+                        localStorage.setItem('currentUser', JSON.stringify({token: token }));
                         this.router.navigate(['/dashboard']);
                         return true;
                     } else {
@@ -100,11 +104,24 @@ export class CoinsimService {
                 const token = response.json() && response.json().token;
                 if (token) {
                     this.token = token;
-                    localStorage.setItem('currentUser', JSON.stringify({ username: username, token: token }));
+                    localStorage.setItem('currentUser', JSON.stringify({token: token }));
                     this.router.navigate(['/dashboard']);
                 }
             }
         );
+    }
+
+    /**
+     * Refresh token
+     */
+    refresh() {     
+        return this.http.post('/api/v1/auth/token-refresh/', {'token': this.token})
+        .map((r: Response) => (r.json()))
+        .subscribe((json) => {
+            const token = json.token;
+            this.token = token;
+            localStorage.setItem('currentUser', JSON.stringify({token: this.token}));
+        })
     }
   
     transactions() {

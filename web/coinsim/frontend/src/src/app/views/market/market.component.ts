@@ -97,8 +97,8 @@ export class MarketComponent implements OnInit {
     console.log(this.marketModel);
   }
 
-  ngOnInit() {
-
+  ngOnInit() { 
+    this.cs.refresh();
   }
 
 }
