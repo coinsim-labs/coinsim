@@ -29,7 +29,8 @@ export class BalanceHistoryComponent implements OnInit {
     let that = this;
     this.chart = new Chart({
       chart: {
-        type: 'area'
+        type: 'area',
+        marginRight: 70
       },
       title: {
         text: 'Wallet history'
@@ -195,6 +196,20 @@ export class BalanceHistoryComponent implements OnInit {
     }).first();
   }
 
+  getCurrentBalances() {
+    return this.coinsimService.balances().switchMap(balancesResult => {
+      const currencies = balancesResult.map(balance => balance.currency);
+      return this.cryptoService.singleCryptoPrice('USD', currencies.join(',')).map(prices => {
+        balancesResult.map(balance => {
+          balance.inUSD = balance.amount / prices[balance.currency];
+          return balance;
+        });
+        return balancesResult;
+      });
+    });
+  }
+
+
   ngOnInit() {
     this.coinsimService.transactions().subscribe((transactionResult) => {
       const tasks = [];
@@ -242,13 +257,13 @@ export class BalanceHistoryComponent implements OnInit {
       // }
 
       // All values Include today's transactions by
-      let tomorrow = new Date();
-      tomorrow.setMilliseconds(0);
-      tomorrow.setSeconds(0);
-      tomorrow.setMinutes(0);
-      tomorrow.setHours(0);
+      let today = new Date();
+      today.setMilliseconds(0);
+      today.setSeconds(0);
+      today.setMinutes(0);
+      today.setHours(0);
       // Add historical balances by adding the last known balance for each currency to days without transaction
-      while (minDate < tomorrow.getTime()) {
+      while (minDate < today.getTime()) {
         minDate += 24 * 60 * 60 * 1000;
         for (const currency in currencies) {
          if (currencies.hasOwnProperty(currency)) {
@@ -270,10 +285,11 @@ export class BalanceHistoryComponent implements OnInit {
          }
         }
       }
-       for (const currency in currencies) {
-         if (currencies.hasOwnProperty(currency)) {
-           tasks.push(this.transactionPriceObservable(currency, currencies));
-         }
+
+      for (const currency in currencies) {
+        if (currencies.hasOwnProperty(currency)) {
+          tasks.push(this.transactionPriceObservable(currency, currencies));
+        }
       }
 
       Observable.forkJoin(...tasks).subscribe((transactionPriceResults) => {
@@ -288,7 +304,7 @@ export class BalanceHistoryComponent implements OnInit {
           // so right now we just assume that timeStamp of price[i] ~= timeStamp of balance[i]
           // Should create a better solution.
           const timestamps = Object.keys(balances).sort();
-          for (let i = 0; i < timestamps.length - 1; i++) {
+          for (let i = 0; i < timestamps.length; i++) {
             const timestamp = timestamps[i];
             const balance = balances[timestamp];
             const date = new Date(parseInt(timestamp, 10));
@@ -309,28 +325,36 @@ export class BalanceHistoryComponent implements OnInit {
             results[currency][date.getTime()] = [date.getTime(), usdBalance, balance];
           };
         });
-        for (const key in results) {
-          if (results.hasOwnProperty(key)) {
-            const data = [];
-            for (const dateKey in results[key]) {
-              if (results[key].hasOwnProperty(dateKey)) {
-                const seriesEntry = {x:0, y:0, marker: {}, balance: 0};
-                seriesEntry.x = results[key][dateKey][0];
-                seriesEntry.y = results[key][dateKey][1];
-                seriesEntry.balance = results[key][dateKey][2];
-                seriesEntry.marker = this.getMarker(key, seriesEntry.x, transactions);
-                data.push(seriesEntry); //results[key][dateKey]
+
+        let now = new Date();
+        this.getCurrentBalances().subscribe(balances => {
+          balances.forEach(balance => {
+            results[balance.currency][now.getTime()] = [now.getTime(), balance.inUSD, balance.amount];
+          });
+
+          for (const key in results) {
+            if (results.hasOwnProperty(key)) {
+              const data = [];
+              for (const dateKey in results[key]) {
+                if (results[key].hasOwnProperty(dateKey)) {
+                  const seriesEntry = {x:0, y:0, marker: {}, balance: 0};
+                  seriesEntry.x = results[key][dateKey][0];
+                  seriesEntry.y = results[key][dateKey][1];
+                  seriesEntry.balance = results[key][dateKey][2];
+                  seriesEntry.marker = this.getMarker(key, seriesEntry.x, transactions);
+                  data.push(seriesEntry); //results[key][dateKey]
+                }
               }
+              const lineData = {
+                name: key,
+                data: data,
+                color: this.cryptoColors[key]
+              };
+              series.push(lineData);
             }
-            const lineData = {
-              name: key,
-              data: data,
-              color: this.cryptoColors[key]
-            };
-            series.push(lineData);
           }
-        }
-        this.buildChart(series, transactions);
+          this.buildChart(series, transactions);
+        });
       });
     });
   }
