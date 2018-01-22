@@ -4,8 +4,9 @@ import { BalanceHistory } from './balancehistory';
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'angular-highcharts';
 import { DatePipe } from '@angular/common';
-import { CurrencyPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
+import { colors } from '../../../cryptocolors';
 
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/first';
@@ -18,14 +19,18 @@ import 'rxjs/add/operator/first';
 export class BalanceHistoryComponent implements OnInit {
 
   chart: Chart;
+  cryptoColors: any;
 
-  constructor(private coinsimService: CoinsimService, private cryptoService: CryptoCompareService) { }
+  constructor(private coinsimService: CoinsimService, private cryptoService: CryptoCompareService) {
+    this.cryptoColors = colors;
+  }
 
   buildChart(series, transactions) {
     let that = this;
     this.chart = new Chart({
       chart: {
-        type: 'area'
+        type: 'area',
+        marginRight: 70
       },
       title: {
         text: 'Wallet history'
@@ -40,29 +45,59 @@ export class BalanceHistoryComponent implements OnInit {
       },
       tooltip: {
         positioner: function (labelWidth, labelHeight, point) {
-            return { x: point.plotX - labelWidth/2, y: this.chart.plotTop };
+            return { x: this.chart.plotLeft + point.plotX - labelWidth/2, y: this.chart.plotTop - 50 };
         },
         formatter: function() {
           const currencyName = this.point.series.name;
           let datePipe = new DatePipe('en-US');
-          let currencyPipe = new CurrencyPipe('en-US');
-          let transaction = that.getCorrespondingTransaction(currencyName, this.x, transactions);
-          if(transaction !== false) {
-            return '<span style="font-size: smaller">'+ datePipe.transform(this.x, 'longDate')+ '</span>'
-              + '<br/>'
-              + currencyPipe.transform(transaction.amount, transaction.source_currency)+ '-&gt;'
-              + currencyPipe.transform(transaction.amount / transaction.dest_price, transaction.dest_currency)
-              + '<br/>'
-              + this.point.series.name + ': <strong>' + currencyPipe.transform(this.y, '$') + '</strong>'
-              + '<br/>'
-              + 'total:' + currencyPipe.transform(this.total, '$');
-          } else {
-            return '<span style="font-size: smaller">'+ datePipe.transform(this.x, 'longDate')+ '</span>'
-              + '<br/>'
-              + this.point.series.name + ': <strong>' + currencyPipe.transform(this.y, '$') + '</strong>'
-              + '<br/>'
-              + 'total:' + currencyPipe.transform(this.total, '$');
+          let decimalPipe = new DecimalPipe('en-US');
+
+          // let transaction = that.getCorrespondingTransaction(currencyName, this.x, transactions);
+          // if (transaction !== false) {
+          let balance = this.point.balance;
+          // if(transaction.source_currency === currencyName) {
+          //   balance = transaction.new_balance_source;
+          // } else {
+          //   balance = transaction.new_balance_dest;
+          // }
+
+          let index = this.series.xData.indexOf(this.x);
+          let prevBalance = 0;
+          if(index > 0) {
+            prevBalance = this.series.data[index-1].balance;
           }
+
+          let balanceChange = '';
+          if(this.point.balance > prevBalance) {
+            balanceChange = 'Change: <span style="color: #4dbd74; word-spacing: -2px">+'
+              + decimalPipe.transform(this.point.balance - prevBalance, '1.0-8')
+              + ' ' + currencyName + '</span><br/>';
+          } else if(this.point.balance < prevBalance) {
+            balanceChange = 'Change: <span style="color: #DF5A49; word-spacing: -2px">'
+              + decimalPipe.transform(this.point.balance - prevBalance, '1.0-8')
+              + ' ' + currencyName + '</span><br/>';
+          }
+          // else {
+          //   balanceChange += 'Change: <span class="balance-unchanged">+0.00</span>';
+          // }
+
+          // if(balanceChange !== '') {
+          //   return '<span style="font-size: smaller">' + datePipe.transform(this.x, 'longDate') + '</span>'
+          //     + '<br/>'
+          //     + balanceChange
+          //     + '<br/>'
+          //     + 'Balance: <strong class="currency">' + balance + currencyName + '</strong>'
+          //     + '<br/>'
+          //     + 'Valued at: <strong>' + currencyPipe.transform(this.y, '$') + '</strong>'
+          //     + '<br/>'
+          //     + 'Total:' + currencyPipe.transform(this.total, '$');
+          // }
+
+          return '<span style="font-size: smaller">'+ datePipe.transform(this.x, 'longDate')+ '</span><br/>'
+            + balanceChange
+            + 'Balance: <span style="word-spacing: -2px">' + decimalPipe.transform(balance, '1.0-8') + ' ' + currencyName + '</span><br/>'
+            + 'Valued at: <span style="word-spacing: -2px; font-weight: bold">' + decimalPipe.transform(this.y, '1.0-2') + ' $' + '</span><br/>'
+            + 'Total: <span style="word-spacing: -2px">' + decimalPipe.transform(this.total, '1.0-2') + ' $' +'</span><br/>';
         },
         crosshairs: [{
             width: 1,
@@ -78,9 +113,7 @@ export class BalanceHistoryComponent implements OnInit {
       },
       plotOptions: {
         area: {
-          stacking: 'normal',
-          lineColor: '#666666',
-          lineWidth: 1
+          stacking: 'normal'
         },
         series: {
           marker: {
@@ -163,6 +196,20 @@ export class BalanceHistoryComponent implements OnInit {
     }).first();
   }
 
+  getCurrentBalances() {
+    return this.coinsimService.balances().switchMap(balancesResult => {
+      const currencies = balancesResult.map(balance => balance.currency);
+      return this.cryptoService.singleCryptoPrice('USD', currencies.join(',')).map(prices => {
+        balancesResult.map(balance => {
+          balance.inUSD = balance.amount / prices[balance.currency];
+          return balance;
+        });
+        return balancesResult;
+      });
+    });
+  }
+
+
   ngOnInit() {
     this.coinsimService.transactions().subscribe((transactionResult) => {
       const tasks = [];
@@ -210,14 +257,13 @@ export class BalanceHistoryComponent implements OnInit {
       // }
 
       // All values Include today's transactions by
-      let tomorrow = new Date();
-      tomorrow.setMilliseconds(0);
-      tomorrow.setSeconds(0);
-      tomorrow.setMinutes(0);
-      tomorrow.setHours(0);
-
+      let today = new Date();
+      today.setMilliseconds(0);
+      today.setSeconds(0);
+      today.setMinutes(0);
+      today.setHours(0);
       // Add historical balances by adding the last known balance for each currency to days without transaction
-      while (minDate < tomorrow.getTime()) {
+      while (minDate < today.getTime()) {
         minDate += 24 * 60 * 60 * 1000;
         for (const currency in currencies) {
          if (currencies.hasOwnProperty(currency)) {
@@ -239,10 +285,11 @@ export class BalanceHistoryComponent implements OnInit {
          }
         }
       }
-       for (const currency in currencies) {
-         if (currencies.hasOwnProperty(currency)) {
-           tasks.push(this.transactionPriceObservable(currency, currencies));
-         }
+
+      for (const currency in currencies) {
+        if (currencies.hasOwnProperty(currency)) {
+          tasks.push(this.transactionPriceObservable(currency, currencies));
+        }
       }
 
       Observable.forkJoin(...tasks).subscribe((transactionPriceResults) => {
@@ -257,7 +304,7 @@ export class BalanceHistoryComponent implements OnInit {
           // so right now we just assume that timeStamp of price[i] ~= timeStamp of balance[i]
           // Should create a better solution.
           const timestamps = Object.keys(balances).sort();
-          for (let i = 0; i < timestamps.length - 1; i++) {
+          for (let i = 0; i < timestamps.length; i++) {
             const timestamp = timestamps[i];
             const balance = balances[timestamp];
             const date = new Date(parseInt(timestamp, 10));
@@ -275,29 +322,39 @@ export class BalanceHistoryComponent implements OnInit {
             //const dateKey = [date.getDate(), date.getMonth(), date.getFullYear()].join('-');
             const usdBalance = balance / price;
 
-            results[currency][date.getTime()] = [date.getTime(), usdBalance];
+            results[currency][date.getTime()] = [date.getTime(), usdBalance, balance];
           };
         });
-        for (const key in results) {
-          if (results.hasOwnProperty(key)) {
-            const data = [];
-            for (const dateKey in results[key]) {
-              if (results[key].hasOwnProperty(dateKey)) {
-                const seriesEntry = {x:0, y:0, marker: {}};
-                seriesEntry.x = results[key][dateKey][0];
-                seriesEntry.y = results[key][dateKey][1];
-                seriesEntry.marker = this.getMarker(key, seriesEntry.x, transactions);
-                data.push(seriesEntry); //results[key][dateKey]
+
+        let now = new Date();
+        this.getCurrentBalances().subscribe(balances => {
+          balances.forEach(balance => {
+            results[balance.currency][now.getTime()] = [now.getTime(), balance.inUSD, balance.amount];
+          });
+
+          for (const key in results) {
+            if (results.hasOwnProperty(key)) {
+              const data = [];
+              for (const dateKey in results[key]) {
+                if (results[key].hasOwnProperty(dateKey)) {
+                  const seriesEntry = {x:0, y:0, marker: {}, balance: 0};
+                  seriesEntry.x = results[key][dateKey][0];
+                  seriesEntry.y = results[key][dateKey][1];
+                  seriesEntry.balance = results[key][dateKey][2];
+                  seriesEntry.marker = this.getMarker(key, seriesEntry.x, transactions);
+                  data.push(seriesEntry); //results[key][dateKey]
+                }
               }
+              const lineData = {
+                name: key,
+                data: data,
+                color: this.cryptoColors[key]
+              };
+              series.push(lineData);
             }
-            const lineData = {
-              name: key,
-              data: data
-            };
-            series.push(lineData);
           }
-        }
-        this.buildChart(series, transactions);
+          this.buildChart(series, transactions);
+        });
       });
     });
   }

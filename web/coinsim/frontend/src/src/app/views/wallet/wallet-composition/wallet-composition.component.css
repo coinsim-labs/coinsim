@@ -9,3 +9,7 @@ tr td:nth-child(1) img {
     width: 22px;
     margin-right: 12px;
   }
+
+tr.total {
+  border-top: 2px solid;
+}

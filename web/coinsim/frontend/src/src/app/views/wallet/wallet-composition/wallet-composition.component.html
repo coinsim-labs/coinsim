@@ -19,12 +19,12 @@
                   <td style="text-align:right;">{{balance.amount | number: '1.5-5'}}</td>
                   <td style="text-align:right;">{{balance.inUSD | number : '1.2-2'}} $</td>
               </tr>
-              <tr style="border-top:2px solid #c2cfd6;">
+              <tr style="border-top:2px solid #c2cfd6;" *ngIf="balances | async">
                 <td><span style="font-weight:700;">Total Dollar</span></td>
                 <td></td>
-                <td style="text-align:right;"><span style="font-weight:700;color: #463f3f;">{{sum | number : '1.2-2'}} $</span></td>
-                
+                <td style="text-align:right;"><span style="font-weight:700;color: #463f3f;">{{totalInUSD | number : '1.2-2'}} $</span></td>
               </tr>
+
               </tbody>
             </table>
           </div>

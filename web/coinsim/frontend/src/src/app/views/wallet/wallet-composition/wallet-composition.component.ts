@@ -5,6 +5,7 @@ import { DecimalPipe } from '@angular/common';
 import { Chart } from 'angular-highcharts';
 import { Balance } from './balance';
 import { Observable } from 'rxjs/Observable';
+import { colors } from '../../../cryptocolors';
 import 'rxjs/add/operator/switchMap';
 
 @Component({
@@ -13,14 +14,17 @@ import 'rxjs/add/operator/switchMap';
   styleUrls: ['./wallet-composition.component.css'],
 })
 export class WalletCompositionComponent implements OnInit {
-  
+
   @Input() currency_map: any;
   balances: Observable<Balance[]>;
+  totalInUSD: Observable<number>
   chart: Chart;
-  balanceResult;
-  sum = 0;
+  cryptoColors: any;
 
-  constructor(private coinsimService: CoinsimService, private cryptoService: CryptoCompareService) { }
+  constructor(private coinsimService: CoinsimService, private cryptoService: CryptoCompareService) {
+    this.cryptoColors = colors;
+  }
+
 
   ngOnInit() {
     this.balances = this.coinsimService.balances().switchMap(balancesResult => {
@@ -30,35 +34,32 @@ export class WalletCompositionComponent implements OnInit {
           balance.inUSD = balance.amount / prices[balance.currency];
           return balance;
         });
-        this.calculateSum(balancesResult)
         return balancesResult;
       });
     });
     this.balances.subscribe(this.buildPieChart.bind(this));
+    this.balances.subscribe(this.getTotalInUSD.bind(this))
   }
-    
 
-  calculateSum(array) {
-    this.sum = 0;
-    array.forEach(element => {
-      this.sum += element.inUSD;
-    });
+  getTotalInUSD(balances) {
+    this.totalInUSD = balances.reduce((a,b) => a + b.inUSD, 0);
   }
 
   buildPieChartSeries(balances) {
     const data = balances.map(balance => {
       return {
         name: balance.currency,
+        color: this.cryptoColors[balance.currency],
         y: balance.inUSD
       };
     });
-    
+
     return [{
       name: 'Percentage',
       data: data
     }]
   }
-  
+
   buildPieChart(balances) {
     const series = this.buildPieChartSeries(balances);
     this.chart = new Chart({
