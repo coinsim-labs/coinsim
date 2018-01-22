@@ -19,6 +19,12 @@
                   <td>{{balance.amount}}</td>
                   <td>{{balance.inUSD}}</td>
 		          </tr>
+              <tr class="total" *ngIf="balances | async">
+                 <td><span>Total in Dollar </span>(USD)
+                  </td>
+                  <td></td>
+                  <td>{{totalInUSD}}</td>
+		          </tr>
               </tbody>
             </table>
           </div>
