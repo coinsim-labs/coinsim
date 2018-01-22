@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CoinsimService } from '../../coinsim.service';
 import { CryptoCompareService } from '../../cryptocompare.service';
-import * as $ from 'jquery'; // SORRY :(
 
 @Component({
   selector: 'app-trading',
@@ -217,7 +216,7 @@ export class TradingComponent implements OnInit {
    */
   onInputChange(event, item, list) {
     let newValue = event.srcElement.value;
-    const slider = $(this.getSliderId(item.sym, list));
+    const slider = null;
     const sliderElement = slider.data('ionRangeSlider');
 
     // check for invalid input
