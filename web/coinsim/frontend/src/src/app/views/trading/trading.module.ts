@@ -10,6 +10,7 @@ import {MatSliderModule} from '@angular/material/slider';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+//import 'hammerjs';
 
 @NgModule({
   imports: [
