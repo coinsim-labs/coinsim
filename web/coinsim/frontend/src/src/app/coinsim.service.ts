@@ -44,11 +44,11 @@ export class CoinsimService {
             } else {
                 return false;
             }
-        }).catch((error: any) => {
-            console.log(error);
+        }).catch((error: Response) => {
             this.router.navigate(['pages/login']);
-            return false;
+            return Observable.throw(new Error(error.json()));
         })
+        
     }
     
     /**
