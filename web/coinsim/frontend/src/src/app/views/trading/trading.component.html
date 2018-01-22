@@ -37,9 +37,16 @@
                     <i class="fa fa-exchange" aria-hidden="true"></i>
                 </span></div>
                 <ul class="bank-trading-list">
+                    <mat-slider min="0" max="100" step="1" value="0"></mat-slider>
                   <li *ngFor="let item of model.trading.buy" class="trading-item">
+
+                      
+
                     <div class="container-name">
                       <span class="title">{{item.sym}}</span>
+
+                      
+
                       <input id="{{item.sym}}BankInput" (keyup)="onInputChange($event, item, 'Bank')" type="number" min="0" max="100"
                         step="0.001" [(ngModel)]="item.percent" disabled>
                       <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="{{item.sym | lowercase}}-icon">

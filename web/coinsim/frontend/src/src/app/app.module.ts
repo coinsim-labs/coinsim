@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+//import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
@@ -82,6 +82,9 @@ import { HistoryComponent } from './views/history/history.component';
 import { HistoryTableComponent } from './views/history/history-table/history-table.component';
 import { TradingComponent } from './views/trading/trading.component';
 import { AppCryptoDayChartComponent } from './components';
+import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common'
+import { MatSliderModule} from '@angular/material/slider';
 
 
 export function highchartsModules() {
@@ -91,7 +94,8 @@ export function highchartsModules() {
 
 @NgModule({
   imports: [
-    BrowserModule,
+    CommonModule,
+    BrowserAnimationsModule,
     HttpModule,
     AppRoutingModule,
     BsDropdownModule.forRoot(),

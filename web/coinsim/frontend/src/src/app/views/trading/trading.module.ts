@@ -6,6 +6,10 @@ import { IonRangeSliderModule } from 'ng2-ion-range-slider';
 
 import { TradingComponent } from './trading.component';
 import { TradingRoutingModule } from './trading-routing.module';
+import {MatSliderModule} from '@angular/material/slider';
+
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -13,8 +17,13 @@ import { TradingRoutingModule } from './trading-routing.module';
     CommonModule,
     ChartModule,
     IonRangeSliderModule,
-    FormsModule
+    FormsModule,
+    MatSliderModule,
+    //BrowserAnimationsModule,
+    //NoopAnimationsModule
   ],
-  declarations: [ TradingComponent ]
+  declarations: [ 
+    TradingComponent,
+   ]
 })
 export class TradingModule { }
