@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CoinsimService } from '../../../coinsim.service';
 import { CryptoCompareService } from '../../../cryptocompare.service';
+import { DecimalPipe } from '@angular/common';
 import { Chart } from 'angular-highcharts';
 import { Balance } from './balance';
 import { Observable } from 'rxjs/Observable';
@@ -16,7 +17,9 @@ export class WalletCompositionComponent implements OnInit {
   @Input() currency_map: any;
   balances: Observable<Balance[]>;
   chart: Chart;
-  
+  balanceResult;
+  sum = 0;
+
   constructor(private coinsimService: CoinsimService, private cryptoService: CryptoCompareService) { }
 
   ngOnInit() {
@@ -27,12 +30,21 @@ export class WalletCompositionComponent implements OnInit {
           balance.inUSD = balance.amount / prices[balance.currency];
           return balance;
         });
+        this.calculateSum(balancesResult)
         return balancesResult;
       });
     });
     this.balances.subscribe(this.buildPieChart.bind(this));
   }
     
+
+  calculateSum(array) {
+    this.sum = 0;
+    array.forEach(element => {
+      this.sum += element.inUSD;
+    });
+  }
+
   buildPieChartSeries(balances) {
     const data = balances.map(balance => {
       return {
