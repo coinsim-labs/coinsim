@@ -11,6 +11,9 @@ import { AppComponent } from './app.component';
 import { CoinsimService } from './coinsim.service';
 import { CryptoCompareService } from './cryptocompare.service';
 
+import { HAMMER_GESTURE_CONFIG, GestureConfig} from 'hammerjs'
+
+
 // Import containers
 import {
   FullLayoutComponent,
@@ -100,7 +103,9 @@ export function highchartsModules() {
     AppRoutingModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
-    ChartModule
+    ChartModule,
+
+    MatSliderModule,
   ],
   declarations: [
     AppComponent,
@@ -117,7 +122,8 @@ export function highchartsModules() {
         useClass: HashLocationStrategy
       }, 
       CryptoCompareService,
-      { provide: HIGHCHARTS_MODULES, useFactory: highchartsModules } 
+      { provide: HIGHCHARTS_MODULES, useFactory: highchartsModules },
+      //{provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}
       
   ],
   bootstrap: [ AppComponent ]
