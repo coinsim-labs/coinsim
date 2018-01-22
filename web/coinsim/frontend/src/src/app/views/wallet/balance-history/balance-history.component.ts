@@ -4,7 +4,9 @@ import { BalanceHistory } from './balancehistory';
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'angular-highcharts';
 import { DatePipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
+
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/first';
 
@@ -20,6 +22,7 @@ export class BalanceHistoryComponent implements OnInit {
   constructor(private coinsimService: CoinsimService, private cryptoService: CryptoCompareService) { }
 
   buildChart(series, transactions) {
+    let that = this;
     this.chart = new Chart({
       chart: {
         type: 'area'
@@ -41,11 +44,24 @@ export class BalanceHistoryComponent implements OnInit {
         },
         formatter: function() {
           const currencyName = this.point.series.name;
-          if(this.hasTransaction(currencyName, this.x, transactions)) {
-            return false;
-
+          let datePipe = new DatePipe('en-US');
+          let currencyPipe = new CurrencyPipe('en-US');
+          let transaction = that.getCorrespondingTransaction(currencyName, this.x, transactions);
+          if(transaction !== false) {
+            return '<span style="font-size: smaller">'+ datePipe.transform(this.x, 'longDate')+ '</span>'
+              + '<br/>'
+              + currencyPipe.transform(transaction.amount, transaction.source_currency)+ '-&gt;'
+              + currencyPipe.transform(transaction.amount / transaction.dest_price, transaction.dest_currency)
+              + '<br/>'
+              + this.point.series.name + ': <strong>' + currencyPipe.transform(this.y, '$') + '</strong>'
+              + '<br/>'
+              + 'total:' + currencyPipe.transform(this.total, '$');
           } else {
-            return false;
+            return '<span style="font-size: smaller">'+ datePipe.transform(this.x, 'longDate')+ '</span>'
+              + '<br/>'
+              + this.point.series.name + ': <strong>' + currencyPipe.transform(this.y, '$') + '</strong>'
+              + '<br/>'
+              + 'total:' + currencyPipe.transform(this.total, '$');
           }
         },
         crosshairs: [{
@@ -70,9 +86,6 @@ export class BalanceHistoryComponent implements OnInit {
           marker: {
             enabled: false,
             states:{
-               hover:{
-                   enabled: false,
-               },
                select:{
                    enabled: false,
                }
@@ -92,24 +105,28 @@ export class BalanceHistoryComponent implements OnInit {
 //                lineColor: '#666666'
  //           }
 
-  hasTransaction(currencyName, x, transactions) {
-    let hasTransaction = false;
+  getCorrespondingTransaction(currencyName, x, transactions) {
     for (const timestamp in transactions[currencyName]) {
       if (parseInt(timestamp,10) === x) {
-        hasTransaction = true;
+        return transactions[currencyName][timestamp];
       }
     }
-    return hasTransaction;
+    return false;
+  }
+
+  hasCorrespondingTransaction(currencyName, x, transactions) {
+    return this.getCorrespondingTransaction(currencyName, x, transactions) !== false;
   }
 
   getMarker(currencyName, x, transactions) {
 
-    if(this.hasTransaction(currencyName, x, transactions)) {
+    if(this.hasCorrespondingTransaction(currencyName, x, transactions)) {
       return {
           enabled: true,
            states:{
              hover:{
-                 enabled: true,
+               enabled: true,
+               lineWidthPlus: 1
              },
              select:{
                  enabled: true,
@@ -155,38 +172,52 @@ export class BalanceHistoryComponent implements OnInit {
       transactionResult.forEach((transaction) => {
         // Assume that transaction results are ordered by timeStamp (TODO is this correct?)
         const dateKey = new Date(transaction.timestamp);
-        minDate = Math.min(dateKey.getTime(), minDate);
         // Overwrite all balances from the same day with the last one
         dateKey.setMilliseconds(0);
         dateKey.setSeconds(0);
         dateKey.setMinutes(0);
         dateKey.setHours(0);
 
+        minDate = Math.min(dateKey.getTime(), minDate);
+
         if (typeof currencies[transaction.source_currency] === 'undefined') {
           currencies[transaction.source_currency] = [];
+          transactions[transaction.source_currency] = [];
         }
         currencies[transaction.source_currency][dateKey.getTime()] = transaction.new_balance_source;
+        transactions[transaction.source_currency][dateKey.getTime()] = transaction;
 
         if (typeof currencies[transaction.dest_currency] === 'undefined') {
           currencies[transaction.dest_currency] = [];
+          transactions[transaction.dest_currency] = [];
         }
 
         currencies[transaction.dest_currency][dateKey.getTime()] = transaction.new_balance_dest;
+        transactions[transaction.dest_currency][dateKey.getTime()] = transaction;
+
       });
       //For some reason this seems to be the only way to copy currencies without reference
-      for (const currency in currencies) {
-        if (currencies.hasOwnProperty(currency)) {
-          transactions[currency] = [];
-          const timestamps = Object.keys(currencies[currency]).sort();
-          for (const timestamp of timestamps) {
-            if (currencies[currency].hasOwnProperty(timestamp)) {
-              transactions[currency][timestamp] = currencies[currency][timestamp];
-            }
-          }
-        }
-      }
+      // for (const currency in currencies) {
+      //   if (currencies.hasOwnProperty(currency)) {
+      //     transactions[currency] = [];
+      //     const timestamps = Object.keys(currencies[currency]).sort();
+      //     for (const timestamp of timestamps) {
+      //       if (currencies[currency].hasOwnProperty(timestamp)) {
+      //         transactions[currency][timestamp] = currencies[currency][timestamp];
+      //       }
+      //     }
+      //   }
+      // }
 
-      while (minDate < (new Date()).getTime()) {
+      // All values Include today's transactions by
+      let tomorrow = new Date();
+      tomorrow.setMilliseconds(0);
+      tomorrow.setSeconds(0);
+      tomorrow.setMinutes(0);
+      tomorrow.setHours(0);
+
+      // Add historical balances by adding the last known balance for each currency to days without transaction
+      while (minDate < tomorrow.getTime()) {
         minDate += 24 * 60 * 60 * 1000;
         for (const currency in currencies) {
          if (currencies.hasOwnProperty(currency)) {

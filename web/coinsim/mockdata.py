@@ -148,13 +148,13 @@ Transaction(user=profile, source_currency='BTC', dest_currency='ETH', amount=0.0
 Transaction(user=profile, source_currency='ETH', dest_currency='USD', amount=0.90857075, new_balance_source=3.5, dest_price=0.0009136602, new_balance_dest=1994.429, timestamp=datetime.strptime('Jan 18 2018  1:38PM', '%b %d %Y %I:%M%p')).save() #iii
 
 # Test Szenario komplex zusammengewürfelt
-Transaction(user=profile, source_currency='USD', dest_currency='BTC', amount=994.429, new_balance_source=1000.0, dest_price=11542.22521844, new_balance_dest=0.28615574, timestamp=datetime.strptime('Jan 21 2018  1:33PM', '%b %d %Y %I:%M%p')).save() #i
-Transaction(user=profile, source_currency='BTC', dest_currency='ETH', amount=0.08, new_balance_source=0.20615574, dest_price=0.08978586, new_balance_dest=4.391008896, timestamp=datetime.strptime('Jan 21 2018  1:35PM', '%b %d %Y %I:%M%p')).save() #i, iii
-Transaction(user=profile, source_currency='BTC', dest_currency='XRP', amount=0.1, new_balance_source=0.10615574, dest_price=0.00011936, new_balance_dest=1457.0569457, timestamp=datetime.strptime('Jan 21 2018  1:35PM', '%b %d %Y %I:%M%p')).save() #iii
-Transaction(user=profile, source_currency='XRP', dest_currency='ETH', amount=957.0569457, new_balance_source=500.0, dest_price=764.596140, new_balance_dest=5.64272453, timestamp=datetime.strptime('Jan 21 2018  1:36PM', '%b %d %Y %I:%M%p')).save() #i
-Transaction(user=profile, source_currency='ETH', dest_currency='DASH', amount=0.64272453, new_balance_source=5.0, dest_price=0.77266372, new_balance_dest=1.83182957, timestamp=datetime.strptime('Jan 21 2018  1:37PM', '%b %d %Y %I:%M%p')).save() #i, iii
-Transaction(user=profile, source_currency='ETH', dest_currency='USD', amount=1.0, new_balance_source=4.0, dest_price=0.0009493739285, new_balance_dest=2053.3257444, timestamp=datetime.strptime('Jan 21 2018  1:37PM', '%b %d %Y %I:%M%p')).save() #iii
-Transaction(user=profile, source_currency='USD', dest_currency='DASH', amount=1000.0, new_balance_source=1053.3257444, dest_price=813.90127899, new_balance_dest=3.0604798, timestamp=datetime.strptime('Jan 21 2018  3:38PM', '%b %d %Y %I:%M%p')).save() #iii
+Transaction(user=profile, source_currency='USD', dest_currency='BTC', amount=994.429, new_balance_source=1000.0, dest_price=11542.22521844, new_balance_dest=0.28615574, timestamp=datetime.strptime('Jan 22 2018  1:33PM', '%b %d %Y %I:%M%p')).save() #i
+Transaction(user=profile, source_currency='BTC', dest_currency='ETH', amount=0.08, new_balance_source=0.20615574, dest_price=0.08978586, new_balance_dest=4.391008896, timestamp=datetime.strptime('Jan 22 2018  1:35PM', '%b %d %Y %I:%M%p')).save() #i, iii
+Transaction(user=profile, source_currency='BTC', dest_currency='XRP', amount=0.1, new_balance_source=0.10615574, dest_price=0.00011936, new_balance_dest=1457.0569457, timestamp=datetime.strptime('Jan 22 2018  1:35PM', '%b %d %Y %I:%M%p')).save() #iii
+Transaction(user=profile, source_currency='XRP', dest_currency='ETH', amount=957.0569457, new_balance_source=500.0, dest_price=764.596140, new_balance_dest=5.64272453, timestamp=datetime.strptime('Jan 22 2018  1:36PM', '%b %d %Y %I:%M%p')).save() #i
+Transaction(user=profile, source_currency='ETH', dest_currency='DASH', amount=0.64272453, new_balance_source=5.0, dest_price=0.77266372, new_balance_dest=1.83182957, timestamp=datetime.strptime('Jan 22 2018  1:37PM', '%b %d %Y %I:%M%p')).save() #i, iii
+Transaction(user=profile, source_currency='ETH', dest_currency='USD', amount=1.0, new_balance_source=4.0, dest_price=0.0009493739285, new_balance_dest=2053.3257444, timestamp=datetime.strptime('Jan 22 2018  1:37PM', '%b %d %Y %I:%M%p')).save() #iii
+Transaction(user=profile, source_currency='USD', dest_currency='DASH', amount=1000.0, new_balance_source=1053.3257444, dest_price=813.90127899, new_balance_dest=3.0604798, timestamp=datetime.strptime('Jan 22 2018  3:38PM', '%b %d %Y %I:%M%p')).save() #iii
 
 # Create some Balances
 
