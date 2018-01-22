@@ -5,3 +5,25 @@
 .row .col-sm-5 {
     display: inline-block;
 }
+
+.top-price {
+    color: #a3a1a1;
+    margin-left: 20px;
+    font-size: 16px;
+}
+
+.pct {
+    
+    color: white;
+    border-radius: 5px;
+    padding: 1px 6px;
+}
+
+.red {
+
+    background: #d8a0a0;
+}
+
+.green {
+    background:  #6db56d
+}
