@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+//import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
@@ -10,6 +10,9 @@ import { AppComponent } from './app.component';
 
 import { CoinsimService } from './coinsim.service';
 import { CryptoCompareService } from './cryptocompare.service';
+
+import { HAMMER_GESTURE_CONFIG, GestureConfig} from 'hammerjs'
+
 
 // Import containers
 import {
@@ -82,6 +85,9 @@ import { HistoryComponent } from './views/history/history.component';
 import { HistoryTableComponent } from './views/history/history-table/history-table.component';
 import { TradingComponent } from './views/trading/trading.component';
 import { AppCryptoDayChartComponent } from './components';
+import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common'
+import { MatSliderModule} from '@angular/material/slider';
 
 
 export function highchartsModules() {
@@ -91,12 +97,15 @@ export function highchartsModules() {
 
 @NgModule({
   imports: [
-    BrowserModule,
+    CommonModule,
+    BrowserAnimationsModule,
     HttpModule,
     AppRoutingModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
-    ChartModule
+    ChartModule,
+
+    MatSliderModule,
   ],
   declarations: [
     AppComponent,
@@ -113,7 +122,8 @@ export function highchartsModules() {
         useClass: HashLocationStrategy
       }, 
       CryptoCompareService,
-      { provide: HIGHCHARTS_MODULES, useFactory: highchartsModules } 
+      { provide: HIGHCHARTS_MODULES, useFactory: highchartsModules },
+      //{provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}
       
   ],
   bootstrap: [ AppComponent ]

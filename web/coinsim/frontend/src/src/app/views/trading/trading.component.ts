@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CoinsimService } from '../../coinsim.service';
-import * as $ from 'jquery'; // SORRY :(
+import { CryptoCompareService } from '../../cryptocompare.service';
 
 @Component({
   selector: 'app-trading',
@@ -9,10 +9,15 @@ import * as $ from 'jquery'; // SORRY :(
 })
 export class TradingComponent implements OnInit {
 
+
+
   private model = {
     trading: {
       buy: [],
       sell: [],
+    },
+    exchange: {
+
     },
     wallet: {
       currencies: []
@@ -22,21 +27,23 @@ export class TradingComponent implements OnInit {
     }
   };
 
-  constructor(private cs: CoinsimService) {
+  constructor(private cs: CoinsimService, private ccs: CryptoCompareService) {
   }
 
 
   ngOnInit() {
+    this.cs.refresh();
+
     this.cs.balances().subscribe((balanceResult) => {
-      Object.keys(balanceResult).forEach(function(key) {
+      Object.keys(balanceResult).forEach(function (key) {
         balanceResult[key].selected = false;
-        });
+      });
       this.model.wallet.currencies = balanceResult;
     });
     this.cs.currencies().subscribe((currenciesResult) => {
-      Object.keys(currenciesResult).forEach(function(key) {
+      Object.keys(currenciesResult).forEach(function (key) {
         currenciesResult[key].selected = false;
-        });
+      });
       this.model.bank.currencies = currenciesResult;
     })
   }
@@ -78,29 +85,28 @@ export class TradingComponent implements OnInit {
 
     if (targetModel === 'buy') {
       if (buyLength === 0) { return true; }
-      if (buyLength > 0 ) {
-        if (sellLength <= 1 ) { return true; }
+      if (buyLength > 0) {
+        if (sellLength <= 1) { return true; }
         return false;
-      } 
+      }
     }
 
     if (targetModel === 'sell') {
       if (sellLength === 0) { return true; }
-      if (sellLength > 0 ) {
-        if (buyLength <= 1 ) { return true; }
+      if (sellLength > 0) {
+        if (buyLength <= 1) { return true; }
         return false;
-      } 
+      }
     }
   }
 
   /**
    * Called when item from wallet was selected
-   * TODO: highlight presssed currency from wallet
    * creates Object in tradingModel
    * @param target domElem that called function
    * @param item  model of that item
    */
-  createSellObject(target, item) {
+  clickSellObject(target, item) {
     if (!item.selected) {
       // add item to tradingmodel
       const allowed = this.canAddTradingObject('sell');
@@ -113,62 +119,93 @@ export class TradingComponent implements OnInit {
         'amount': item.amount
       };
       this.model.trading.sell.push(currency);
-      item.selected = true;
     } else {
-        // remove item from tradingmodel
-        const sym = item.currency;
-        let sellModel = this.model.trading.sell;
-        sellModel = sellModel.filter((el) => {
-            return el.sym !== sym;
-          }
-        );
-        
-        this.model.trading.sell = sellModel;
-        item.selected = false;
+      // remove item from tradingmodel
+      const sym = item.currency;
+      let sellModel = this.model.trading.sell;
+      sellModel = sellModel.filter((el) => {
+        return el.sym !== sym;
+      }
+      );
+
+      this.model.trading.sell = sellModel;
     }
+    item.selected = !item.selected;
   }
 
   /**
   * Called when item from bank was selected
-   * TODO: highlight presssed currency from wallet
    * creates Object in tradingModel
    * @param target domElem that called function
    * @param item  model of that item
    */
-  createBuyObject(target, item) {
+  clickBuyObject(target, item) {
     if (!item.selected) {
       // add item to buymodel
       const allowed = this.canAddTradingObject('buy');
       if (!allowed) { return; }
 
+      const length = this.model.trading.buy.length + 1;
+      this.model.trading.buy.forEach(element => {
+        element.percent = 100 / length;
+      });
+
       const currency = {
-        'name': item.name,
-        'sym': item.sym
+        'sym': item.sym,
+        'amount': item.amount,
+        'percent': 100 / length
       };
       this.model.trading.buy.push(currency);
-      item.selected = true;
+
     } else {
-      // remove item from boyModel
-      const sym = item.currency;
-      let buyModel = this.model.trading.sell;
+      // remove item from buymModel
+      const sym = item.sym;
+      let buyModel = this.model.trading.buy;
       buyModel = buyModel.filter((el) => {
-          return el.sym !== sym;
-        }
+        return el.sym !== sym;
+      }
       );
-      
+
+      const length = this.model.trading.buy.length - 1;
+      this.model.trading.buy.forEach(element => {
+        element.percent = 100 / length;
+      });
+
       this.model.trading.buy = buyModel;
-      item.selected = false;
     }
+    item.selected = !item.selected;
   }
 
   /**
-   * Called when slider changes
-   * @param value new valuw
+   * Called when slider from SellItem changes
+   * @param value new value
    * @param item currency
    */
   updateSlider(value, item) {
-    console.log(item, value)
     item.amount = value;
+  }
+
+  /**
+   * Called when slider from BuyItem changing
+   * calculate new percentamount for each 
+   * @param value new Percent as int (90% = 90)
+   * @param item item in model
+   */
+  onPercentChanges(value, item) {
+    if (!isNaN(value)) {
+      const items = this.model.trading.buy;
+      const numberOfItems = items.length - 1;
+      const delta = value - item.percent;
+      const x = delta / numberOfItems;
+
+      items.forEach(element => {
+        if (element.sym !== item.sym) {
+          element.percent = element.percent - x;
+        }
+      });
+
+      item.percent = value;
+    }
   }
 
   /**
@@ -181,14 +218,14 @@ export class TradingComponent implements OnInit {
    */
   onInputChange(event, item, list) {
     let newValue = event.srcElement.value;
-    const slider = $(this.getSliderId(item.sym, list));
+    const slider = null;
     const sliderElement = slider.data('ionRangeSlider');
 
     // check for invalid input
     if (item.balance < newValue) {
       event.srcElement.value = item.balance;
       newValue = item.balance;
-    } 
+    }
     if (newValue < 0) {
       event.srcElement.value = 0;
       newValue = 0;
@@ -203,7 +240,7 @@ export class TradingComponent implements OnInit {
         from: newValue,
         max: item.balance,
         onChange: (data) => {
-          this.updateSlider(data.from, item.sym, list);
+          this.updateSlider(data.from, item.sym);
         }
       });
     } else {
@@ -214,11 +251,57 @@ export class TradingComponent implements OnInit {
   }
 
   /**
+   * Called after exchange model sucessfully updated
+   * calculates new amounts for the currencies user
+   * wants to buy
+   */
+  updateBuyAmount() {
+
+  }
+
+  /**
+   * sets new exchangemodel
+   * and calls updatefunction for Buy Objects
+   * @param Success Horray
+   */
+  onExchangeModelSuccess(Success: Object) {
+    if (Success.hasOwnProperty('RAW')) {
+      const raw = Success['RAW'];
+      this.model.exchange = raw;
+      this.updateBuyAmount();
+    }
+  }
+
+  /**
+   * gets current exchangerates for
+   * currency in the tradingmodel
+   */
+  updateExchangeModel() {
+    let sellSymbols = '';
+    let buySymbols = '';
+    this.model.trading.sell.forEach((item) => {
+      sellSymbols += item.sym + ',';
+    });
+    this.model.trading.buy.forEach((item) => {
+      buySymbols += item.sym + ',';
+    })
+
+    this.ccs.multiCryptoPrice(
+      sellSymbols, buySymbols,
+      null, 'coinsim', null, null, true)
+      .map(result => result)
+      .subscribe(
+      (Success) => { this.onExchangeModelSuccess(Success) },
+      (Error) => { console.log(Error); alert('Failed to get ExchangeRates') }
+      );
+  }
+
+  /**
    * Called when reset button was pressed
    * empties all models
    */
   reset() {
-    console.log(this.model);
+    this.updateExchangeModel();
     // this.model.trading.sell = [];
     // this.model.trading.buy = [];
   }

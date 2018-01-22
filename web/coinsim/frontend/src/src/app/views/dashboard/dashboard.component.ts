@@ -13,16 +13,18 @@ export class DashboardComponent implements OnInit{
   currencies: any;
 
   constructor( private cs: CoinsimService ) {
-    this.username = JSON.parse(localStorage.getItem('currentUser')).username;
+    let token = JSON.parse(localStorage.getItem('currentUser')).token;
+    token = token.split('.');
+    this.username = JSON.parse(atob(token[1])).username;
    }
 
    ngOnInit() {
+    this.cs.refresh();
+
     this.cs.balances().subscribe(balances => {
       this.currencies = balances
       .map(balance => balance.currency)
-      .filter(currency => currency != 'USD');
-
-      console.log(this.currencies)
+      .filter(currency => currency !== 'USD');
     });
 
     

@@ -1,82 +1,82 @@
 <div class="animated fadeIn">
-  <div class="container p-3 bg-white">
-    <div class="row">
-      <div class="col">
-        <h5>Wallet</h5>
-        <ul class="wallet-list">
-          <li *ngFor="let item of model.wallet.currencies" class="wallet-item" [ngClass]="{'selected': item.selected}" (click)="createSellObject($event.target, item)">
-            <img src="assets/img/crypto-icons/{{item.currency | lowercase}}.png" alt="btc-icon">
-            <div>
-              <span class="title">{{item.currency}}</span>
-              <span class="sum">{{item.amount}}</span>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="col-7">
-        <div class="container">
-          <div class="row">
-            <h3>Trading Area</h3>
-            <div class="trading-area col-12">
-              <ul class="wallet-trading-list">
-                <li *ngFor="let item of model.trading.sell" class="trading-item">
-                  <div class="container-name">
-                    <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="btc-icon">
-                    <input id="{{item.sym}}WalletInput" (keyup)="onInputChange($event, item, 'Wallet')" type="number" min="0" max="{{item.balance}}"
-                      step="0.001" value="{{item.balance}}" [(ngModel)]="item.amount">
-                    <span class="title">{{item.sym}}</span>
-                  </div>
-                  <div class="container-slider">
-                    <ion-range-slider id="{{item.sym}}WalletSlider" type="single" step="0.0001" min="0" max="{{item.balance}}" from="{{item.balance}}"
-                      (onChange)="updateSlider($event.from, item)"></ion-range-slider>
-                  </div>
-                </li>
-              </ul>
-              <div class="trading-icon-container"><span>
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <h5>Wallet</h5>
+          <ul class="wallet-list">
+            <li *ngFor="let item of model.wallet.currencies" class="wallet-item" [ngClass]="{'selected': item.selected}" (click)="clickSellObject($event.target, item)">
+              <img src="assets/img/crypto-icons/{{item.currency | lowercase}}.png" alt="btc-icon">
+              <div>
+                <span class="title">{{item.currency}}</span>
+                <span class="sum">{{item.amount}}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="col-7">
+          <div class="container">
+            <div class="row">
+              <h3>Trading Area</h3>
+              <div class="trading-area col-12">
+                <ul class="wallet-trading-list">
+                  <li *ngFor="let item of model.trading.sell" class="trading-item">
+                    <div class="container-name">
+                      <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="btc-icon">
+                      <input id="{{item.sym}}WalletInput" (keyup)="onInputChange($event, item, 'Wallet')" type="number" min="0" max="{{item.balance}}"
+                        step="0.001" [(ngModel)]="item.amount">
+                      <span class="title">{{item.sym}}</span>
+                    </div>
+                    <div class="container-slider">
+                      <ion-range-slider id="{{item.sym}}WalletSlider" type="single" step="0.0001" min="0" max="{{item.balance}}" from="{{item.balance}}"
+                        (onChange)="updateSlider($event.from, item)"></ion-range-slider>
+                    </div>
+                  </li>
+                </ul>
+                <div class="trading-icon-container"><span>
                     <i class="fa fa-exchange" aria-hidden="true"></i>
                 </span></div>
-              <ul class="bank-trading-list">
-                <li *ngFor="let item of model.trading.buy" class="trading-item">
-                  <div class="container-name">
-                    <span class="title">{{item.sym}}</span>
-                    <input id="{{item.sym}}BankInput" (keyup)="onInputChange($event, item, 'Bank')" type="number" min="0" max="{{item.balance}}"
-                    step="0.001" value="0" disabled>
-                    <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="{{item.sym | lowercase}}-icon">
-                  </div>
-                  <div class="container-slider">
-                    <ion-range-slider id="{{item.SHORT}}BankSlider"
-                            type="single"
-                            step="1"
-                            min="0"
-                            max="100"
-                            from="100"
-                            postfix= "%"
-                            (onChange)="updateSlider($event.from, item.SHORT, 'Bank')"
-                            ></ion-range-slider>
-                  </div>
-              </ul>
+                <ul class="bank-trading-list">
+                    <mat-slider min="0" max="100" step="1" value="0"></mat-slider>
+                  <li *ngFor="let item of model.trading.buy" class="trading-item">
+
+                      
+
+                    <div class="container-name">
+                      <span class="title">{{item.sym}}</span>
+
+                      
+
+                      <input id="{{item.sym}}BankInput" (keyup)="onInputChange($event, item, 'Bank')" type="number" min="0" max="100"
+                        step="0.001" [(ngModel)]="item.percent" disabled>
+                      <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="{{item.sym | lowercase}}-icon">
+                    </div>
+                    <div class="container-slider">
+                      <ion-range-slider id="{{item.SHORT}}BankSlider" type="single" step="1" min="0" max="100" from="100" postfix="%" (onChange)="onPercentChanges($event.from, item)"></ion-range-slider>
+                    </div>
+                </ul>
+              </div>
             </div>
-          </div>
-          <div class="row justify-content-md-center">
-            <div class="col-auto button-container">
-              <button type="button" class="btn btn-light btn-lg" (click)="reset()">Reset</button>
-              <button type="button" class="btn btn-success btn-lg">Buy</button>
+            <div class="row justify-content-md-center">
+              <div class="col-auto button-container">
+                <button type="button" class="btn btn-light btn-lg" (click)="reset()">Reset</button>
+                <button type="button" class="btn btn-success btn-lg">Buy</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col">
-        <h5>Bank</h5>
-        <ul class="bank-list">
-          <li *ngFor="let item of model.bank.currencies" class="bank-item" [ngClass]="{'selected': item.selected}" (click)="createBuyObject($event.target, item)">
-            <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="{{item.sym | lowercase}}-icon">
-            <div>
-              <span class="title">{{item.name}}</span>
-            </div>
-          </li>
-        </ul>
+        <div class="col">
+          <h5>Bank</h5>
+          <ul class="bank-list">
+            <li *ngFor="let item of model.bank.currencies" class="bank-item" [ngClass]="{'selected': item.selected}" (click)="clickBuyObject($event.target, item)">
+              <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="{{item.sym | lowercase}}-icon">
+              <div>
+                <span class="title">{{item.name}}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 </div>
-

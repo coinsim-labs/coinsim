@@ -10,9 +10,10 @@ export class WalletComponent implements OnInit {
 
   currency_map: any;
   
-  constructor(private coinsimService: CoinsimService,) { }
+  constructor(private coinsimService: CoinsimService) { }
 
   ngOnInit() {
+    this.coinsimService.refresh();
     this.coinsimService.currencyMap().subscribe((currencies) => {
       this.currency_map = currencies;
     });
