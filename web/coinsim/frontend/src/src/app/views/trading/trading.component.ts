@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CoinsimService } from '../../coinsim.service';
 import { CryptoCompareService } from '../../cryptocompare.service';
 import * as $ from 'jquery'; // SORRY :(
+import { DecimalPipe } from '@angular/common';
+import {Observable} from 'rxjs/Observable';
+import { ModalDirective } from 'ngx-bootstrap/modal/modal.component';
+import 'rxjs/add/observable/forkJoin';
 
 @Component({
   selector: 'app-trading',
@@ -10,7 +14,7 @@ import * as $ from 'jquery'; // SORRY :(
 })
 export class TradingComponent implements OnInit {
 
-
+  selectedSellItem: any;
 
   private model = {
     trading: {
@@ -28,16 +32,60 @@ export class TradingComponent implements OnInit {
     }
   };
 
+  prices: any;
+  public progressModal;
+  modalTitle;
+  modalText;
+  transactionState;
+
   constructor(private cs: CoinsimService, private ccs: CryptoCompareService) {
+    this.transactionState = 0;
   }
 
 
   ngOnInit() {
+
+    Observable.forkJoin(
+      this.cs.balances(),
+      this.cs.currencies()
+    )
+    .subscribe(resp => {
+      console.log('resp')
+      let balanceResult = resp[0];
+      let currenciesResult = resp[1];
+      
+      // Load balances into model
+      Object.keys(balanceResult).forEach(function (key) {
+        balanceResult[key].selected = false;
+      });
+      this.model.wallet.currencies = balanceResult;
+      this.clickSellObject(null, this.model.wallet.currencies[0]);
+
+      // Load currencies into model
+      Object.keys(currenciesResult).forEach(function (key) {
+        currenciesResult[key].selected = false;
+      });
+      this.model.bank.currencies = currenciesResult;
+
+      // Get price data from cryptocompare
+      let fsyms = currenciesResult.map( b => b.sym).join(',')
+      let tosyms = balanceResult.map( b => b.currency).join(',')
+
+      this.ccs.multiCryptoPrice(fsyms, tosyms, null, null,null,null,false).subscribe( prices => {
+        this.prices = prices;
+      })
+
+
+    })
+
+
     this.cs.balances().subscribe((balanceResult) => {
       Object.keys(balanceResult).forEach(function (key) {
         balanceResult[key].selected = false;
       });
       this.model.wallet.currencies = balanceResult;
+
+      this.clickSellObject(null, this.model.wallet.currencies[0]);
     });
     this.cs.currencies().subscribe((currenciesResult) => {
       Object.keys(currenciesResult).forEach(function (key) {
@@ -106,30 +154,33 @@ export class TradingComponent implements OnInit {
    * @param item  model of that item
    */
   clickSellObject(target, item) {
-    if (!item.selected) {
-      // add item to tradingmodel
-      const allowed = this.canAddTradingObject('sell');
-      if (!allowed) { return; }
-      const listElement = this.getListElement(target);
-      const currency = {
-        'name': 'PLACEHOLDER',
-        'sym': item.currency,
-        'balance': item.amount,
-        'amount': item.amount
-      };
-      this.model.trading.sell.push(currency);
-    } else {
-      // remove item from tradingmodel
-      const sym = item.currency;
+    
+    if (item != this.selectedSellItem) {
+      if (!this.selectedSellItem) {
+        this.selectedSellItem = item
+      }
+      const sym = this.selectedSellItem.currency;
       let sellModel = this.model.trading.sell;
       sellModel = sellModel.filter((el) => {
         return el.sym !== sym;
       }
       );
 
+      this.selectedSellItem = item;
+      const currency = {
+        'name': 'PLACEHOLDER',
+        'sym': item.currency,
+        'balance': item.amount,
+        'amount': item.amount
+      };
+
+      sellModel.push(currency);
+
       this.model.trading.sell = sellModel;
+
+      
     }
-    item.selected = !item.selected;
+
   }
 
   /**
@@ -141,8 +192,7 @@ export class TradingComponent implements OnInit {
   clickBuyObject(target, item) {
     if (!item.selected) {
       // add item to buymodel
-      const allowed = this.canAddTradingObject('buy');
-      if (!allowed) { return; }
+      if (this.selectedSellItem.currency == item.sym) return;  
 
       const length = this.model.trading.buy.length + 1;
       this.model.trading.buy.forEach(element => {
@@ -175,6 +225,19 @@ export class TradingComponent implements OnInit {
     item.selected = !item.selected;
   }
 
+  formatAmount(value, d) {
+    return value.toFixed(d)
+  }
+
+  updateWalletItemValue(value, item) {
+    item.amount = value
+  }
+  
+  updateBuyItemValue(value, item) {
+    item.percent = value
+  }
+
+
   /**
    * Called when slider from SellItem changes
    * @param value new value
@@ -184,6 +247,17 @@ export class TradingComponent implements OnInit {
     item.amount = value;
   }
 
+  sliderMoveStart: number;
+
+  sliderInput(value, item) {
+    //if (this.model.trading.buy.length == 1) 
+    if (!this.sliderMoveStart) {
+      this.sliderMoveStart = item.percent;
+      console.log('start', this.sliderMoveStart)
+    }
+  }
+
+  
   /**
    * Called when slider from BuyItem changing
    * calculate new percentamount for each 
@@ -191,20 +265,58 @@ export class TradingComponent implements OnInit {
    * @param item item in model
    */
   onPercentChanges(value, item) {
-    if (!isNaN(value)) {
+    console.log('------------- changed')
+    //console.log(item, value)
+    if (!isNaN(value) && (this.sliderMoveStart != null)) {
       const items = this.model.trading.buy;
-      const numberOfItems = items.length - 1;
-      const delta = value - item.percent;
-      const x = delta / numberOfItems;
+      let numberOfItems = items.length - 1;
+      let delta = value - this.sliderMoveStart;
+      this.sliderMoveStart = null;
 
-      items.forEach(element => {
-        if (element.sym !== item.sym) {
-          element.percent = element.percent - x;
+      console.log('numerofitems', numberOfItems)
+      console.log('delta', delta)
+
+      let others = 100 - value
+      let count, count_next = numberOfItems;
+
+      while (delta > 0.0001 || delta < -0.001) {
+
+        count = count_next;
+        count_next = numberOfItems;
+        if (!count) break;
+        let part = delta / count;
+
+        for (var i=0; i<items.length; i++) {
+          let el = items[i]
+          if (el.sym == item.sym) continue
+          if (delta > 0 && el.percent == 0) {
+            count_next--;
+            continue
+          }
+          if (delta < 0 && el.percent == 100) continue
+          let change = Math.min(part, el.percent)
+          delta -= change
+          el.percent = el.percent-change;
+          if (delta == 0) break;
+          if (el.percent == 0) count_next--;
         }
-      });
+      }
 
-      item.percent = value;
+      console.log('TOTAL before', this.model.trading.buy.reduce((acc, i) => acc + i.percent, 0))
+      let total =  this.model.trading.buy.reduce((acc, i) => acc + i.percent, 0)
+
+      let diff = 100 - total;
+
+      console.log('diff', diff)
+      let last = this.model.trading.buy[numberOfItems]
+      if (diff < 0 && last.percent >= -diff) last.percent -= diff
+      if (diff > 0 && last.percent <= 100-diff) last.percent += diff
+
+      console.log('TOTAL', this.model.trading.buy.reduce((acc, i) => acc + i.percent, 0))
+
     }
+
+    return false;
   }
 
   /**
@@ -216,7 +328,8 @@ export class TradingComponent implements OnInit {
    * @param list in which list the clickevent happend
    */
   onInputChange(event, item, list) {
-    let newValue = event.srcElement.value;
+    console.log(event)
+    let newValue = event.value;
     const slider = $(this.getSliderId(item.sym, list));
     const sliderElement = slider.data('ionRangeSlider');
 
@@ -300,9 +413,45 @@ export class TradingComponent implements OnInit {
    * empties all models
    */
   reset() {
-    this.updateExchangeModel();
-    // this.model.trading.sell = [];
-    // this.model.trading.buy = [];
+      this.model.trading.buy = []
+      this.model.trading.sell = []
+      this.model.bank.currencies.forEach(c => {
+        c.selected = false;
+      })
+      this.cs.balances().subscribe(balanceResult => {
+        // Load balances into model
+          Object.keys(balanceResult).forEach(function (key) {
+            balanceResult[key].selected = false;
+          });
+          this.model.wallet.currencies = balanceResult;
+          
+          this.clickSellObject(null, this.model.wallet.currencies[0]);
+  
+      })
   }
+
+
+  processTransaction() {
+    this.transactionState = 1;
+    let calls = this.model.trading.buy.map(item => {
+        let source = this.model.trading.sell[0].sym
+        let dest = item.sym
+        let amount = this.model.trading.sell[0].amount * (item.percent/100)
+        console.log('source',source)
+        console.log('dest',dest)
+        console.log('amount',amount)
+        return this.cs.instant_order(source, dest, amount)
+    })
+
+    Observable.forkJoin(calls)
+    .subscribe(resp => {
+      console.log(resp)
+      this.transactionState = 2
+      this.reset();
+    });
+    
+  }
+
+
 
 }

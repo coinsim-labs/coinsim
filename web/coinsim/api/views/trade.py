@@ -77,15 +77,17 @@ class InstantOrder(CreateAPIView):
 
         order = amount * dest_price
 
-        balance = Balance.objects.get(user=request.user.profile, currency=source_currency)
-        if amount > balance.amount:
-            raise APIException('balance-too-low', 400)
+        source_balance = None
+        try:
+            source_balance = Balance.objects.get(user=request.user.profile, currency=source_currency)
+        except Balance.DoesNotExist:
+            raise APIException('source-balance-not-avail', 500)
+
+        if amount > source_balance.amount:
+            amount = source_balance.amount
+            #raise APIException('balance-too-low', 400)
 
         with django.db.transaction.atomic():
-            source_balance, _ = Balance.objects.get_or_create(
-                user=request.user.profile,
-                currency=source_currency
-            )
             source_balance.amount -= amount
 
             dest_balance, _ = Balance.objects.get_or_create(

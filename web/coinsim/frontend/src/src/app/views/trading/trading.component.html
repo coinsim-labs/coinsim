@@ -4,32 +4,48 @@
       <div class="row">
         <div class="col">
           <h5>Wallet</h5>
+          <p>Choose a currency to sell</p>
           <ul class="wallet-list">
-            <li *ngFor="let item of model.wallet.currencies" class="wallet-item" [ngClass]="{'selected': item.selected}" (click)="clickSellObject($event.target, item)">
+
+            <li *ngFor="let item of model.wallet.currencies" class="wallet-item" [ngClass]="{'selected': item.currency == selectedSellItem.currency }" (click)="clickSellObject($event.target, item)">
               <img src="assets/img/crypto-icons/{{item.currency | lowercase}}.png" alt="btc-icon">
               <div>
                 <span class="title">{{item.currency}}</span>
                 <span class="sum">{{item.amount}}</span>
               </div>
             </li>
+
           </ul>
         </div>
         <div class="col-7">
           <div class="container">
             <div class="row">
-              <h3>Trading Area</h3>
+              <h5><span>Trading Area</span></h5>
               <div class="trading-area col-12">
                 <ul class="wallet-trading-list">
                   <li *ngFor="let item of model.trading.sell" class="trading-item">
                     <div class="container-name">
                       <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="btc-icon">
-                      <input id="{{item.sym}}WalletInput" (keyup)="onInputChange($event, item, 'Wallet')" type="number" min="0" max="{{item.balance}}"
-                        step="0.001" [(ngModel)]="item.amount">
+
+                      <input id="{{item.sym}}WalletInput" type="number" min="0" max="{{item.balance}}"
+                          step="{{item.sym == 'USD' ? 0.01 : 0.000000000000001}}" 
+                          [ngModel]="item.sym == 'USD' ? formatAmount(item.amount, 2) : formatAmount(item.amount, 8)" 
+                          (ngModelChange)="item.amount=$event">
                       <span class="title">{{item.sym}}</span>
                     </div>
+                    
                     <div class="container-slider">
-                      <ion-range-slider id="{{item.sym}}WalletSlider" type="single" step="0.0001" min="0" max="{{item.balance}}" from="{{item.balance}}"
-                        (onChange)="updateSlider($event.from, item)"></ion-range-slider>
+
+                        <mat-slider min="0"  
+                          [(ngModel)]="item.amount" max="{{item.balance}}" 
+                          step="{{item.sym == 'USD' ? 0.01 : 0.000000001}}" value="0" 
+                          (mousedown)="sliderInput($event, item)" 
+                          (change)="onPercentChanges($event.value, item)" 
+                          (input)="updateWalletItemValue($event.value, item)">
+                        </mat-slider>
+                      
+                      <!--ion-range-slider id="{{item.sym}}WalletSlider" type="single" step="0.0001" min="0" max="{{item.balance}}" from="{{item.balance}}"
+                        (onChange)="updateSlider($event.from, item)"></ion-range-slider-->
                     </div>
                   </li>
                 </ul>
@@ -37,8 +53,8 @@
                     <i class="fa fa-exchange" aria-hidden="true"></i>
                 </span></div>
                 <ul class="bank-trading-list">
-                    <mat-slider min="0" max="100" step="1" value="0"></mat-slider>
-                  <li *ngFor="let item of model.trading.buy" class="trading-item">
+                   
+                  <li *ngFor="let item of model.trading.buy; let last = last" class="trading-item">
 
                       
 
@@ -46,13 +62,30 @@
                       <span class="title">{{item.sym}}</span>
 
                       
-
-                      <input id="{{item.sym}}BankInput" (keyup)="onInputChange($event, item, 'Bank')" type="number" min="0" max="100"
-                        step="0.001" [(ngModel)]="item.percent" disabled>
+                      
+                      <input id="{{item.sym}}BankInput" (keyup)="onInputChange($event, item, 'Bank')" type="text" min="0" max="100"
+                        step="0.001" [ngModel]="formatAmount(item.percent, 1) + '%'" disabled>
                       <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="{{item.sym | lowercase}}-icon">
                     </div>
+                    <div class="buy-amount" *ngIf="prices" >
+                      {{
+                        formatAmount(
+                          model.trading.sell[0].amount * (item.percent/100) * (1/prices[item.sym][model.trading.sell[0].sym]),
+                          8
+                        )
+                      }}
+                    </div>
                     <div class="container-slider">
-                      <ion-range-slider id="{{item.SHORT}}BankSlider" type="single" step="1" min="0" max="100" from="100" postfix="%" (onChange)="onPercentChanges($event.from, item)"></ion-range-slider>
+
+                        <mat-slider min="0" max="100" step="1" 
+                          [(ngModel)]="item.percent"
+                          [disabled]="model.trading.buy.length == 1"
+                          (mousedown)="sliderInput($event, item)" 
+                          (change)="onPercentChanges($event.value, item)"
+                          (input)="updateBuyItemValue($event.value, item)">
+                        </mat-slider>
+                      
+                      <!--ion-range-slider id="{{item.SHORT}}BankSlider" type="single" step="1" min="0" max="100" from="100" postfix="%" (onChange)="onPercentChanges($event.from, item)"></ion-range-slider-->
                     </div>
                 </ul>
               </div>
@@ -60,23 +93,74 @@
             <div class="row justify-content-md-center">
               <div class="col-auto button-container">
                 <button type="button" class="btn btn-light btn-lg" (click)="reset()">Reset</button>
-                <button type="button" class="btn btn-success btn-lg">Buy</button>
+                <button type="button" class="btn btn-success btn-lg" data-toggle="modal" (click)="progressModal.show()">Buy</button>
+
               </div>
             </div>
           </div>
         </div>
         <div class="col">
           <h5>Bank</h5>
+          <p>Choose Currencies to buy</p>
           <ul class="bank-list">
-            <li *ngFor="let item of model.bank.currencies" class="bank-item" [ngClass]="{'selected': item.selected}" (click)="clickBuyObject($event.target, item)">
+
+            <li *ngFor="let item of model.bank.currencies" class="bank-item" 
+            [ngClass]="{'selected': item.selected, 'disabled': item.sym == selectedSellItem.currency}" 
+            (click)="clickBuyObject($event.target, item)">
+
               <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="{{item.sym | lowercase}}-icon">
               <div>
                 <span class="title">{{item.name}}</span>
+                <span class="sum" *ngIf="prices">1 {{item.sym}} = {{prices[item.sym][selectedSellItem.currency]}} {{selectedSellItem.currency}} </span>
               </div>
             </li>
+
           </ul>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+
+<div bsModal #progressModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 *ngIf="transactionState == 0" class="modal-title">Confirm transaction</h4>
+          <h4 *ngIf="transactionState == 1"class="modal-title">Processing...</h4>
+          <h4 *ngIf="transactionState == 2"class="modal-title">Success</h4>
+          
+          <button type="button" class="close" (click)="progressModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div >
+            <div *ngIf="transactionState == 0 && prices && model.trading.buy.length  && model.trading.sell.length"> 
+              <p>You are about to buy</p>
+              <ul>
+                <li *ngFor="let item of model.trading.buy">
+                  <span>
+                    {{formatAmount(
+                      model.trading.sell[0].amount * (item.percent/100) * (1/prices[item.sym][model.trading.sell[0].sym]),
+                      8
+                    )}} {{ item.sym}}</span>
+                </li>
+              </ul>
+              <p>with <b>{{model.trading.sell[0].amount}} {{model.trading.sell[0].sym}}</b></p>
+            </div>
+            <div *ngIf="transactionState == 2"> 
+                <p>Transaction Complete!</p>
+            </div>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="progressModal.hide()" *ngIf="transactionState != 2" [disabled]="transactionState == 1" type="button" class="btn btn-secondary">Cancel</button>
+          <button (click)="processTransaction()" *ngIf="transactionState != 2" [disabled]="transactionState == 1" type="button" class="btn btn-primary">Do it!</button>
+          
+          <button (click)="progressModal.hide()" *ngIf="transactionState == 2"  type="button" class="btn btn-primary">Close</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
