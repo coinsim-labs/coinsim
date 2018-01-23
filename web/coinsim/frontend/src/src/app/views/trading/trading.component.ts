@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CoinsimService } from '../../coinsim.service';
 import { CryptoCompareService } from '../../cryptocompare.service';
-import * as $ from 'jquery'; // SORRY :(
 import { DecimalPipe } from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import { ModalDirective } from 'ngx-bootstrap/modal/modal.component';
