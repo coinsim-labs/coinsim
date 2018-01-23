@@ -18,6 +18,8 @@ urlpatterns = [
     url(r'^trade/currencies/', Currencies.as_view()),
     url(r'^trade/instant_order/', InstantOrder.as_view()),
 
+    url(r'^crypto/descriptions/', CryptoDescriptions.as_view()),
+
     url(r'^', include(router.urls)),
     url(r'^user/balances/', Balances.as_view()),
     url(r'^user/transactions/', Transactions.as_view()),

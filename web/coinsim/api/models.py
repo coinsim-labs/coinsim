@@ -50,6 +50,7 @@ class Balance(models.Model):
             amount = self.amount,
             curr=self.currency)
 
+
 class Currency(models.Model):
     name = models.CharField(max_length=64)
     sym = models.CharField(max_length=32, unique=True)
@@ -59,3 +60,14 @@ class Currency(models.Model):
         return "{name} ({sym})".format(
             name = self.name,
             sym = self.sym)
+
+
+class CryptoDescription(models.Model):
+    currency = models.CharField(max_length=32, null=False)
+    text = models.TextField(null=False)
+    lang = models.CharField(max_length=32, default='en_US')
+
+    def __str__(self):
+        return "{currency}: {text}".format(
+            currency = self.currency,
+            text = self.text)

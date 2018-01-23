@@ -10,6 +10,9 @@ usage: docker exec -it coinsim_web_1 python mockdata.py
 import os
 import django
 from datetime import datetime
+import urllib.request
+from bs4 import BeautifulSoup
+import traceback
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "coinsim.settings")
 django.setup()
@@ -25,6 +28,7 @@ profile = u.profile
 Currency.objects.all().delete()
 profile.balances.all().delete()
 profile.transactions.all().delete()
+CryptoDescription.objects.all().delete()
 
 # Create some Currencies
 
@@ -59,6 +63,26 @@ Currency(sym='POWR', name='Powerledger').save()
 Currency(sym='BCC', name='Bitconnect').save()
 Currency(sym='VTC', name='Vertcoin').save()
 Currency(sym='LSK', name='Lisk').save()
+
+def saveDescription(sym, currencyName):
+    print(sym+': '+currencyName)
+    req = urllib.request.Request('https://www.coingecko.com/en/coins/'+currencyName.lower(), headers={'User-Agent' : "Magic Browser"})
+
+    try:
+        con = urllib.request.urlopen(req)
+
+        soup = BeautifulSoup(con.read(), 'html.parser')
+        res = soup.find_all(attrs={"class": "card-block"})
+        CryptoDescription(currency=sym, text=res[0].prettify().encode("utf-8")).save();
+
+    except Exception:
+        print(repr(traceback.print_exc(limit=2)))
+
+for (sym, name) in [('ETH','ethereum-classic'), ('BCH', 'bitcoin-cash'), ('SAN','santiment-network-token'), ('XLM','stellar')]:
+    saveDescription(sym, name)
+
+for cur in Currency.objects.all():
+    saveDescription(cur.sym, cur.name)
 
 
 # Test Szenarios:

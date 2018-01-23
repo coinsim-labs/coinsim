@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(Transaction)
 admin.site.register(Balance)
 admin.site.register(Currency)
+admin.site.register(CryptoDescription)

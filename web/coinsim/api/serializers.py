@@ -20,6 +20,11 @@ class CurrencySerializer(ModelSerializer):
         model = Currency
         exclude = ('id', )
 
+class CryptoDescriptionSerializer(ModelSerializer):
+    class Meta:
+        model = CryptoDescription
+        exclude = ('id', )
+
 class UserSerializer(ModelSerializer):
 
     class Meta:

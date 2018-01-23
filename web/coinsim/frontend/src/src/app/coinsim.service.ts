@@ -148,7 +148,16 @@ export class CoinsimService {
         return this.http.get('/api/v1/trade/currencies/')
             .map((response: Response) => response.json());
     }
-    
+
+     /**
+     * Observable of cryptocurrencies descriptions.
+     * Returns an object of type [{currency: 'ETH', text: 'Lorem ipsum...', lang: 'en_US'}, {currency: ...}, ...]
+     */
+    cryptoDescriptions() {
+        return this.http.get('/api/v1/crypto/descriptions/')
+            .map((response: Response) => response.json());
+    }
+
     public currencyMap(refresh?: boolean): Observable<any> {
         return new Observable(observer => {
             if (this._currencies) {
