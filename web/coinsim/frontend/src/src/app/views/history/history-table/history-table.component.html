@@ -4,18 +4,18 @@
 	    <tr>
 	      <th>Time</th>
 	      <th>Date</th>
-	      <th>Sold</th>
-	      <th>Bought</th>
-	      <th>Exchange rate</th>
+	      <th style="text-align:right;">Sold</th>
+	      <th style="text-align:right;">Bought</th>
+	      <th style="text-align:right;">Exchange rate</th>
 	    </tr>
 	  </thead>
 	  <tbody>
 	    <tr *ngFor="let transaction of transactions | async | reverse">
 		  <td>{{transaction.timestamp.toLocaleTimeString()}}</td>
 		  <td>{{transaction.timestamp.toLocaleDateString()}}</td>
-	      <td>{{transaction.soldAmount | number : '1.2-8'}} {{transaction.soldCurrency}}</td>
-	      <td>{{transaction.boughtAmount | number : '1.2-8'}} {{transaction.boughtCurrency}}</td>
-	      <td>1 {{transaction.soldCurrency}} = {{transaction.getExchangeRate() | number : '1.2-8'}} {{transaction.boughtCurrency}}</td>
+	      <td style="text-align:right;">{{transaction.soldAmount | number : '1.2-8'}} {{transaction.soldCurrency}}</td>
+	      <td style="text-align:right;">{{transaction.boughtAmount | number : '1.2-8'}} {{transaction.boughtCurrency}}</td>
+	      <td style="text-align:right;">1 {{transaction.soldCurrency}} = {{transaction.getExchangeRate() | number : '1.2-8'}} {{transaction.boughtCurrency}}</td>
 	    </tr>
 	  </tbody>
 </table>
