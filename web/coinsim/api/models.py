@@ -16,9 +16,15 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
+
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+@receiver(post_save, sender=Profile)
+def create_start_balance(sender, instance, created, **kwargs):
+    if created:
+        Balance(user=instance, currency='USD', amount=5000).save()
 
 class Transaction(models.Model):
     user = models.ForeignKey(to=Profile, related_name='transactions')
@@ -43,6 +49,10 @@ class Balance(models.Model):
     user = models.ForeignKey(to=Profile, related_name='balances')
     currency = models.CharField(max_length=32)
     amount = models.FloatField(default=0)
+    created = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['created']
 
     def __str__(self):
         return "{user} : {amount} {curr}".format(
