@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CoinsimService } from '../../../coinsim.service';
 import { CryptoCompareService } from '../../../cryptocompare.service';
+import { DecimalPipe } from '@angular/common';
 import { Chart } from 'angular-highcharts';
 import { Balance } from './balance';
 import { Observable } from 'rxjs/Observable';
@@ -23,6 +24,7 @@ export class WalletCompositionComponent implements OnInit {
   constructor(private coinsimService: CoinsimService, private cryptoService: CryptoCompareService) {
     this.cryptoColors = colors;
   }
+
 
   ngOnInit() {
     this.balances = this.coinsimService.balances().switchMap(balancesResult => {
