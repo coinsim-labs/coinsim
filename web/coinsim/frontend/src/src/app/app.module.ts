@@ -77,19 +77,10 @@ import { AppRoutingModule } from './app.routing';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartModule } from 'angular-highcharts';
-import { WalletComponent } from './views/wallet/wallet.component';
-import { BalanceHistoryComponent } from './views/wallet/balance-history/balance-history.component';
-import { WalletCompositionComponent } from './views/wallet/wallet-composition/wallet-composition.component';
-import { MarketComponent } from './views/market/market.component';
-import { PriceSparklinesComponent } from './views/market/price-sparklines/price-sparklines.component';
-import { HistoryComponent } from './views/history/history.component';
-import { HistoryTableComponent } from './views/history/history-table/history-table.component';
-import { TradingComponent } from './views/trading/trading.component';
-import { AppCryptoDayChartComponent } from './components';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common'
 import { MatSliderModule} from '@angular/material/slider';
-
+import { MarketModule } from "./views/market/market.module";
 
 export function highchartsModules() {
   // apply Highcharts Modules to this array
@@ -105,15 +96,14 @@ export function highchartsModules() {
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
     ChartModule,
-
+    MarketModule,
     MatSliderModule,
   ],
   declarations: [
     AppComponent,
     ...APP_CONTAINERS,
     ...APP_COMPONENTS,
-    ...APP_DIRECTIVES,
-    MarketComponent,
+    ...APP_DIRECTIVES
     //AppCryptoDayChartComponent
   ],
   providers: [
@@ -121,11 +111,11 @@ export function highchartsModules() {
       {
         provide: LocationStrategy,
         useClass: HashLocationStrategy
-      }, 
+      },
       CryptoCompareService,
       { provide: HIGHCHARTS_MODULES, useFactory: highchartsModules },
       //{provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}
-      
+
   ],
   bootstrap: [ AppComponent ]
 })

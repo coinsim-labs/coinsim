@@ -24,10 +24,10 @@ export class MarketComponent implements OnInit {
             //this.getMarketModel()
           }, 6000);
         });
-        
 
 
-    
+
+
     console.log(router.isActive('market', true));
 
 
@@ -97,7 +97,7 @@ export class MarketComponent implements OnInit {
     console.log(this.marketModel);
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.cs.refresh();
   }
 
