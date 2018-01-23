@@ -9,6 +9,8 @@ import { MatSliderModule } from '@angular/material/slider';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { ModalModule } from 'ngx-bootstrap/modal';
+//import { ModalsComponent } from './modals.component';
 //import 'hammerjs';
 
 @NgModule({
@@ -18,11 +20,13 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
     ChartModule,
     FormsModule,
     MatSliderModule,
+    ModalModule.forRoot(),
     //BrowserAnimationsModule,
     //NoopAnimationsModule
   ],
   declarations: [ 
     TradingComponent,
+    //ModalsComponent,
    ]
 })
 export class TradingModule { }

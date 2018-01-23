@@ -25,7 +25,7 @@ class Transaction(models.Model):
     source_currency = models.CharField(max_length=32, null=False)
     dest_currency = models.CharField(max_length=32, null=False)
     amount = models.FloatField(null=False)
-    dest_price = models.FloatField(null=False)
+    dest_price = models.FloatField(null=True)
     new_balance_source = models.FloatField(null=True)
     new_balance_dest = models.FloatField(null=True)
     # timestamp = models.DateTimeField(auto_now_add=True)
@@ -42,7 +42,7 @@ class Transaction(models.Model):
 class Balance(models.Model):
     user = models.ForeignKey(to=Profile, related_name='balances')
     currency = models.CharField(max_length=32)
-    amount = models.FloatField()
+    amount = models.FloatField(default=0)
 
     def __str__(self):
         return "{user} : {amount} {curr}".format(

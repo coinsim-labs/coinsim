@@ -181,6 +181,19 @@ export class CoinsimService {
     
       }
 
+      instant_order(source: string, dest:string, amount:number) {
+        const headers = new Headers();
+        headers.append('Authorization', 'JWT ' + this.token);
+        return this.http.post('/api/v1/trade/instant_order/',
+            {
+                'source_currency': source,
+                'dest_currency': dest,
+                'amount': amount
+                    
+            }, {headers: headers})
+            .map((response: Response) => response.json());
+    }
+
     /**
      * Post for Logout
      */
