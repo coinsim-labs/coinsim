@@ -4,6 +4,7 @@ import { CryptoCompareService } from '../../cryptocompare.service';
 import { CoinsimService } from '../../coinsim.service';
 import {Router} from "@angular/router";
 import { RouterLink } from '@angular/router';
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'app-market',
@@ -17,29 +18,41 @@ export class MarketComponent implements OnInit {
 
   constructor(private router : Router, private ccs: CryptoCompareService, private cs: CoinsimService ) {
 
-        const array = this.cs.currencyMap().subscribe(currencies => {
-          this.nameObject = currencies;
-          this.getMarketModel();
-          setInterval(() => {
-            //this.getMarketModel()
-          }, 6000);
-        });
-
-
-
+    const array = this.cs.currencyMap().subscribe(currencies => {
+      this.nameObject = currencies;
+      this.getMarketModel();
+      setInterval(() => {
+        //this.getMarketModel()
+      }, 6000);
+    });
 
     console.log(router.isActive('market', true));
+  }
 
+  addHistoricalPricesToModel(currencies, i) {
+    currencies.slice(i*10, (i+1)*10).forEach(currency => {
+      // Be careful to only subscribe to historicalPrices once because of request limit
+      this.marketModel[currency].historicalPrices = this.ccs.histoDay(currency, 'USD',
+        null, null, null, null, null,
+        6).map((result: any) => result.Data);
+    });
 
+    if(i < currencies.length / 10) {
+      setTimeout(() => {
+        this.addHistoricalPricesToModel(currencies, i+1);
+      }, 1000);
+    }
   }
 
   getMarketModel() {
+    let symbols = Object.keys(this.nameObject);
     this.ccs.multiCryptoPrice(
-      Object.keys(this.nameObject).join(','), 'USD',
-      null, 'coinsim', null, null, true)
-      .map(result => result)
-      .subscribe(
-        (Success) => {this.onMarketModelSuccess(Success)},
+      symbols.join(','), 'USD',
+      null, 'coinsim', null, null, true).subscribe(
+        (Success) => {
+          this.onMarketModelSuccess(Success);
+          this.addHistoricalPricesToModel(symbols, 0);
+        },
         (Error) => {console.log(Error); alert('Failed to get Currencies')}
       );
   }
@@ -48,7 +61,7 @@ export class MarketComponent implements OnInit {
     if (Success.hasOwnProperty('RAW')) {
       const newModel = Success['RAW'];
       const oldModel = this.marketModel;
-      this.marketModel = Object.keys(newModel).map(k => {
+      for(const k in newModel) {
           // set name
           newModel[k].NAME = k;
 
@@ -91,8 +104,9 @@ export class MarketComponent implements OnInit {
             })
           }
 
-          return newModel[k];
-      });
+          // return newModel[k];
+      }
+      this.marketModel = newModel;
     }
     console.log(this.marketModel);
   }

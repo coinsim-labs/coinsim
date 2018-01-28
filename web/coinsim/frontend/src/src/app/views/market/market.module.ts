@@ -8,6 +8,7 @@ import { MarketComponent} from "./market.component";
 import { PriceSparklinesComponent} from "./price-sparklines/price-sparklines.component";
 import { DetailComponent } from '../market-detail/detail.component';
 import { AppCryptoDayChartModule } from '../../components/app-cryptodaychart/app-cryptodaychart.module';
+import {ValuesPipe} from "./ValuesPipe";
 
 export function highchartsModules() {
   // apply Highcharts Modules to this array
@@ -22,7 +23,7 @@ export function highchartsModules() {
     AppCryptoDayChartModule
   ],
   declarations: [
-    DetailComponent, PriceSparklinesComponent, MarketComponent
+    DetailComponent, PriceSparklinesComponent, MarketComponent, ValuesPipe
   ],
   providers: [
     { provide: HIGHCHARTS_MODULES, useFactory: highchartsModules }

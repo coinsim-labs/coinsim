@@ -15,7 +15,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let currency of marketModel" [routerLink]="[currency.NAME]">
+          <tr *ngFor="let currency of marketModel | values" [routerLink]="[currency.NAME]">
 
             <td class={{currency.NAMEFLASH}}>
               <p>
@@ -26,7 +26,7 @@
             <td class={{currency.MKTCAPFLASH}}>{{currency.USD.MKTCAP | number : '1.0-0'}} $</td>
             <td class={{currency.VOLUME24HOURFLASH}}>{{currency.USD.VOLUME24HOUR | number : '1.2-2'}} $</td>
             <td class={{currency.SUPPLYFLASH}}>{{currency.USD.SUPPLY | number : '1.0-0'}} $</td>
-            <td><app-price-sparklines></app-price-sparklines><td>
+            <td><app-price-sparklines *ngIf="currency.historicalPrices | async; let historicalPrices" [priceData]="historicalPrices"></app-price-sparklines><td>
           </tr>
         </tbody>
       </table>
