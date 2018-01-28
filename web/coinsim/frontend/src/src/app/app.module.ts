@@ -1,6 +1,7 @@
 //import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import {HttpClientModule} from '@angular/common/http';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { HIGHCHARTS_MODULES } from 'angular-highcharts';
 import stock from 'highcharts/modules/stock.src';
@@ -92,6 +93,7 @@ export function highchartsModules() {
     CommonModule,
     BrowserAnimationsModule,
     HttpModule,
+    HttpClientModule,
     AppRoutingModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
