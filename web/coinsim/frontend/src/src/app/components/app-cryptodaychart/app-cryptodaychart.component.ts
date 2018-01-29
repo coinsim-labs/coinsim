@@ -169,14 +169,14 @@ export class AppCryptoDayChartComponent implements OnInit {
         }
           this.loadTicker()
         }
-      
+
   };
 
   loadChart() {
     let timestamp = Date.now();
     let days_past = 2000;
-    this.ccs.histoDay(this.selected.sym, 'USD', null,null,null,null,null,days_past,timestamp ).subscribe(data => {
-        this.price_data = data.Data.map( obj => 
+    this.ccs.histoDay(this.selected.sym, 'USD', null,null,null,null,null,days_past,timestamp ).subscribe((data: any) => {
+        this.price_data = data.Data.map( obj =>
             [ parseInt(obj.time)*1000, obj.close ]
         ).filter( i =>  i[1] > 0)
 

@@ -90,7 +90,7 @@ export class MarketPriceComponent implements OnInit {
       this.cryptoService.histoDay(sourceCurrency, destCurrency,
         null, null, null, null, null,
         dayDiff + 5
-      ).subscribe(priceResults => {
+      ).subscribe((priceResults: any) => {
        const data = priceResults.Data.map(result => {
           const date = new Date(result.time + 500);
           const dateKey = [date.getDate(), date.getMonth(), date.getFullYear()].join('-');

@@ -189,7 +189,7 @@ export class BalanceHistoryComponent implements OnInit {
         const timeDiff = Math.ceil(((new Date()).getTime() - parseInt(firstTimestamp, 10)) / 1000 / 60 / 60 / 24);
         this.cryptoService.histo('day', 'USD', currency,
                                          null, null, null, null, null, timeDiff)
-        .subscribe((priceResult) => {
+        .subscribe((priceResult: any) => {
           observer.next({currency: currency, balances: currencies[currency], prices: priceResult.Data});
         });
       }
