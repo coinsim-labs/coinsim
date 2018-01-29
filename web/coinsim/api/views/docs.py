@@ -17,8 +17,8 @@ class DocView(SchemaView):
     <h1 _ngcontent-c6="">Coinsim REST API Docs</h1>
     Welcome, fellow Web-Voyager. You have found the documentation for the Coinsim public REST API. <i class="em em-tada"></i><br>
     With it you may manage your user profile, retrieve balances and transactions and trade your coins.<br><br>
-    Endpoints, that are marked with <jwt style="display: inline-block;margin-bottom: 0;"></jwt> require you 
-    to pass a JSON Web Token to authenticate. 
+    Endpoints, that are marked with <jwt style="display: inline-block;margin-bottom: 0;"></jwt> require you
+    to pass a JSON Web Token to authenticate.
     The JWT is generated for you on signup and regenerated on each login. It can also be refreshed to extend a user session.<br>
     The Token has to be present in an HTTP-Header like so:
     <table style="margin-top: 20px;" _ngcontent-c10="" class="security-details">
@@ -31,8 +31,8 @@ class DocView(SchemaView):
     </table><br>
     Happy Trading! <i class="em em-money_with_wings"></i>
     <span class="border-bottom"></span>
-    
-    
+
+
 """
 
 

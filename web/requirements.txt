@@ -9,4 +9,4 @@ celery==4.1.0
 requests==2.18.4
 djangorestframework-jwt==1.11.0
 beautifulsoup4==4.5.1
--e git://github.com/limdauto/drf_openapi.git#egg=drf_openapi
+drf-openapi==1.0.1
