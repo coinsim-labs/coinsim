@@ -11,7 +11,8 @@ docker# README #
 * cd ./coinsim-gruppe9
 * docker-compose build
 * docker-compose up -d
-* docker exec -it coinsimgruppe9_web_1 python mockdata.py //create mockdata for testuser
+* docker exec -it coinsimgruppe9_web_1 python mockdata.py 
+	* create mockdata for testuser
 * open http://localhost/ in browser
 	* username: "user", password: "user"
 	* For API documentation: http://localhost/api/v1/docs/
