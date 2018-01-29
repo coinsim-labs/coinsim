@@ -9,6 +9,7 @@ from rest_framework.exceptions import APIException
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+import pdb;
 
 from ..serializers import *
 
@@ -42,7 +43,6 @@ class InstantOrder(CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
         transaction = serializer.validated_data
         source_currency = serializer.validated_data.get('source_currency')
         dest_currency = serializer.validated_data.get('dest_currency')
@@ -66,7 +66,6 @@ class InstantOrder(CreateAPIView):
             r.raise_for_status()
         except RequestException as err:
             raise APIException('external-api-error', 500)
-
         response = r.json()
         dest_price = response \
             .get(source_currency, {}) \
@@ -78,19 +77,20 @@ class InstantOrder(CreateAPIView):
         order = amount * dest_price
 
         source_balance = None
-        try:
-            source_balance = Balance.objects.get(user=request.user.profile, currency=source_currency)
-        except Balance.DoesNotExist:
-            raise APIException('source-balance-not-avail', 500)
-
-        if amount > source_balance.amount:
-            amount = source_balance.amount
-            #raise APIException('balance-too-low', 400)
-
+        dest_balance = None
         with django.db.transaction.atomic():
+            try:
+                source_balance = Balance.objects.select_for_update().get(user=request.user.profile, currency=source_currency)
+            except Balance.DoesNotExist:
+                raise APIException('source-balance-not-avail', 500)
+
+            if amount > source_balance.amount:
+                amount = source_balance.amount
+                #raise APIException('balance-too-low', 400)
+
             source_balance.amount -= amount
 
-            dest_balance, _ = Balance.objects.get_or_create(
+            dest_balance, _ = Balance.objects.select_for_update().get_or_create(
                 user=request.user.profile,
                 currency=dest_currency
             )
