@@ -56,10 +56,10 @@ class Ranking(models.Model):
         ordering = ['pos']
 
     def __str__(self):
-        return "{user} : #{pos} roi:{roi} totalUSD:{totalUSD}".format(
+        return "{user} : #{pos} totalUSD:{totalUSD}".format(
             user=str(self.user),
             pos=self.pos,
-            roi=self.roi,
+            #roi=self.roi,
             # totalBTC=self.totalBTC,
             totalUSD=self.totalUSD)
 

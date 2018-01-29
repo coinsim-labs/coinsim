@@ -25,7 +25,7 @@ class AllBalances(ListAPIView):
         return self.list(request, *args, **kwargs)
 
     def get_queryset(self):
-        profiles = Profile.objects.all().select_related('user');
+        profiles = Profile.objects.all().select_related('user')
 
         currencies = [c.sym for c in Currency.objects.all()]
         usdPrices = {}
@@ -42,9 +42,9 @@ class AllBalances(ListAPIView):
 
             response = r.json()
 
-            usdPrices = {**usdPrices, **response.get('USD')};
+            usdPrices = {**usdPrices, **response.get('USD')}
 
-        rankings = [];
+        rankings = []
 
         for profile in profiles:
             profile.totalUSD = 0
@@ -59,4 +59,4 @@ class AllBalances(ListAPIView):
             ranking.pos = idx+1
             # ranking.roi =
 
-        return rankings;
+        return rankings
