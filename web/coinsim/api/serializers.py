@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from .models import *
 from django.contrib.auth import get_user_model
@@ -7,6 +8,19 @@ class BalanceSerializer(ModelSerializer):
     class Meta:
         model = Balance
         exclude = ('id', 'user',)
+
+
+class RankingSerializer(ModelSerializer):
+
+    # rank = serializers.SlugRelatedField(slug_field='pos', read_only=True)
+    userID = serializers.CharField(source='user.id', read_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
+    usermail = serializers.CharField(source='user.email', read_only=True)
+
+    class Meta:
+        model = Ranking
+        fields = ('userID','username','usermail','pos','totalUSD')
+
 
 class TransactionSerializer(ModelSerializer):
     class Meta:
@@ -20,10 +34,12 @@ class CurrencySerializer(ModelSerializer):
         model = Currency
         exclude = ('id', )
 
+
 class CryptoDescriptionSerializer(ModelSerializer):
     class Meta:
         model = CryptoDescription
         exclude = ('id', )
+
 
 class UserSerializer(ModelSerializer):
 
@@ -48,4 +64,4 @@ class UserSerializer(ModelSerializer):
         if 'password' in validated_data:
             password = validated_data.pop('password')
             instance.set_password(password)
-        return super(UserSerializer, self).update(instance, validated_data)
+            return super(UserSerializer, self).update(instance, validated_data)

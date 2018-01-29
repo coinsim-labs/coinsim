@@ -20,6 +20,8 @@ urlpatterns = [
 
     url(r'^crypto/descriptions/', CryptoDescriptions.as_view()),
 
+    url(r'^ranking/all_total_usd_balances/', AllBalances.as_view()),
+
     url(r'^', include(router.urls)),
     url(r'^user/balances/', Balances.as_view()),
     url(r'^user/transactions/', Transactions.as_view()),

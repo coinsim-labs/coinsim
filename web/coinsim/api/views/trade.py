@@ -9,7 +9,6 @@ from rest_framework.exceptions import APIException
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-import pdb;
 
 from ..serializers import *
 
@@ -55,7 +54,6 @@ class InstantOrder(CreateAPIView):
 
         if amount <= 0:
             raise APIException('invalid-balance', 400)
-
 
         r = requests.get(settings.CRYPTO_API.format(
             fsym=source_currency,

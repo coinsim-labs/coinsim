@@ -45,6 +45,25 @@ class Transaction(models.Model):
             to=self.dest_currency)
 
 
+class Ranking(models.Model):
+    user = models.ForeignKey(to=Profile, related_name='rank')
+    pos = models.SmallIntegerField()
+    # roi = models.FloatField(default=0)
+    # totalBTC = models.FloatField(default=0)
+    totalUSD = models.FloatField(default=0)
+
+    class Meta:
+        ordering = ['pos']
+
+    def __str__(self):
+        return "{user} : #{pos} roi:{roi} totalUSD:{totalUSD}".format(
+            user=str(self.user),
+            pos=self.pos,
+            roi=self.roi,
+            # totalBTC=self.totalBTC,
+            totalUSD=self.totalUSD)
+
+
 class Balance(models.Model):
     user = models.ForeignKey(to=Profile, related_name='balances')
     currency = models.CharField(max_length=32)
