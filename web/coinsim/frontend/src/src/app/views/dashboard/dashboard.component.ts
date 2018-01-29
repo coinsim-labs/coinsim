@@ -5,6 +5,7 @@ import { CoinsimService } from '../../coinsim.service';
 
 @Component({
   templateUrl: 'dashboard.component.html',
+  styleUrls: ['dashboard.component.css'],
   providers: [CoinsimService]
 })
 export class DashboardComponent implements OnInit{
@@ -25,6 +26,8 @@ export class DashboardComponent implements OnInit{
       this.currencies = balances
       .map(balance => balance.currency)
       .filter(currency => currency !== 'USD');
+
+      console.log ('currences........', this.currencies);
     });
 
     

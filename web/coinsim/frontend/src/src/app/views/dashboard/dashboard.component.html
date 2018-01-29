@@ -10,12 +10,19 @@
               </div>
               
             </div>
-    
+            
+            <div *ngIf="currencies && currencies.length == 0" class="intro">
+              <p>Hello there {{username}}!
+              It seems like you're new around.<br>
+              You don't have any Coins in your wallet yet, but we have gifted you with $5000 to spend how you like.</p>
+              <p>Happy Trading! <i class="icon-heart"></i></p>
+            </div>
+
           </div>
           
         </div>
-
-      <app-cryptodaychart *ngIf="currencies" [currencies]="currencies"></app-cryptodaychart>
+        
+      <app-cryptodaychart *ngIf="currencies && currencies.length > 0" [currencies]="currencies"></app-cryptodaychart>
 
 </div>
 </div>

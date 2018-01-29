@@ -430,6 +430,11 @@ export class TradingComponent implements OnInit {
       })
   }
 
+  finishTransaction(modal) {
+    modal.hide()
+    this.transactionState = 0;
+  }
+
 
   processTransaction() {
     this.transactionState = 1;

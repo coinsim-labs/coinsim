@@ -159,7 +159,7 @@
           <button (click)="progressModal.hide()" *ngIf="transactionState != 2" [disabled]="transactionState == 1" type="button" class="btn btn-secondary">Cancel</button>
           <button (click)="processTransaction()" *ngIf="transactionState != 2" [disabled]="transactionState == 1" type="button" class="btn btn-primary">Do it!</button>
           
-          <button (click)="progressModal.hide()" *ngIf="transactionState == 2"  type="button" class="btn btn-primary">Close</button>
+          <button (click)="finishTransaction(progressModal)" *ngIf="transactionState == 2"  type="button" class="btn btn-primary">Close</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

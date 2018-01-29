@@ -25,9 +25,16 @@ export class CoinsimService {
     /**
      * Get Header Header with JWT Token
      */
-    getHeaders() {
+    getHeaders(no_cache?: boolean) {
         const headers = new Headers();
         headers.append('Authorization', 'JWT ' + this.token);
+
+        if (no_cache) {
+            headers.append('Cache-control', 'no-cache');
+            headers.append('Cache-control', 'no-store');
+            headers.append('Expires', '0');
+            headers.append('Pragma', 'no-cache');
+        }
         return headers;
     }
 
@@ -98,8 +105,8 @@ export class CoinsimService {
      */
     login(username: string, password: string) {
         this.logout();
-
-        return this.http.post('/api/v1/auth/login/', {'username': username, 'password': password})
+        const header = this.getHeaders(true)
+        return this.http.post('/api/v1/auth/login/', {'username': username, 'password': password}, {headers: header})
             .map((response: Response) => {
                 const token = response.json() && response.json().token;
                 if (token) {
@@ -131,8 +138,7 @@ export class CoinsimService {
     }
 
     balances(): Observable<any> {
-      const headers = new Headers();
-      headers.append('Authorization', 'JWT ' + this.token);
+      const headers = this.getHeaders(true)
       return this.http.get('/api/v1/user/balances/', {headers: headers})
             .map((response: Response) => response.json());
     }
@@ -152,7 +158,8 @@ export class CoinsimService {
      * Returns an object of type {SYM: {name: 'Currency', sym: 'SYM'}, ...}
      */
     currencies() {
-        return this.http.get('/api/v1/trade/currencies/')
+        let headers = this.getHeaders(true)
+        return this.http.get('/api/v1/trade/currencies/', {headers: headers})
             .map((response: Response) => response.json());
     }
 
@@ -171,8 +178,9 @@ export class CoinsimService {
               observer.next(this._currencies);
               return observer.complete();
             }
+            let headers = this.getHeaders(true)
             this.http
-              .get('/api/v1/trade/currencies/')
+              .get('/api/v1/trade/currencies/', {headers: headers})
               .map((r: Response) => (r.json() as Array<Currency>))
               .subscribe((currencyMap: any) => {
                 this._currencies = currencyMap
@@ -205,6 +213,7 @@ export class CoinsimService {
      * Post for Logout
      */
     logout(): void {
+        this._currencies = null;
         this.token = null;
         localStorage.removeItem('currentUser');
     }
