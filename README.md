@@ -6,9 +6,6 @@
 
 ### How do I get set up? ###
 
-* Windows only: Make sure you clone the repo as-is and have git "core.autocrlf" set to "false". 
-  Otherwise you will get into problems because of Windows-style line endings.
-  You can set it manually with "git config --global core.autocrlf false"
 * clone repository
 * cd ./coinsim-gruppe9
 * Windows only: move env.win env
@@ -19,6 +16,11 @@
 * open http://localhost/ in browser
 	* username: "user", password: "user"
 	* For API documentation: http://localhost/api/v1/docs/
+
+### Note to Windows users
+Make sure you clone the repo "as-is" and have git "core.autocrlf" set to "false". 
+Otherwise you will get into problems because of Windows-style line endings.
+You can set it manually with "git config --global core.autocrlf false"
 
 ### Who do I talk to? ###
 
