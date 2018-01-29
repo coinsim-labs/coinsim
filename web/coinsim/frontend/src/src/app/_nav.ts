@@ -2,7 +2,7 @@ export const navigation = [
   {
     title: true,
     name: 'Account'
-  }, 
+  },
   {
     name: 'Home',
     url: '/dashboard',
@@ -13,7 +13,7 @@ export const navigation = [
     url: '/wallet',
     icon: 'icon-wallet',
 
-  }, 
+  },
   {
     name: 'History',
     url: '/history',
@@ -28,6 +28,11 @@ export const navigation = [
     name: 'Trading',
     url: '/trading',
     icon: 'icon-briefcase'
+  },
+  {
+    name: 'Leaderboard',
+    url: '/leaderboard',
+    icon: 'icon-badge'
   },
   {
     name: 'Logout',

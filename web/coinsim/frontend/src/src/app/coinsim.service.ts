@@ -31,7 +31,7 @@ export class CoinsimService {
         return headers;
     }
 
-    
+
     /**
      * Routerfunction to check if user logged in
      */
@@ -48,9 +48,9 @@ export class CoinsimService {
             this.router.navigate(['pages/login']);
             return Observable.throw(new Error(error.json()));
         })
-        
+
     }
-    
+
     /**
      * Post for registering a new account
      * If successful safe token in localstorage
@@ -114,7 +114,7 @@ export class CoinsimService {
     /**
      * Refresh token
      */
-    refresh() {     
+    refresh() {
         return this.http.post('/api/v1/auth/token-refresh/', {'token': this.token})
         .map((r: Response) => (r.json()))
         .subscribe((json) => {
@@ -123,13 +123,13 @@ export class CoinsimService {
             localStorage.setItem('currentUser', JSON.stringify({token: this.token}));
         })
     }
-  
+
     transactions() {
         const headers = this.getHeaders();
         return this.http.get('/api/v1/user/transactions/', {headers: headers})
             .map((response: Response) => response.json());
     }
-  
+
     balances(): Observable<any> {
       const headers = new Headers();
       headers.append('Authorization', 'JWT ' + this.token);
@@ -137,10 +137,17 @@ export class CoinsimService {
             .map((response: Response) => response.json());
     }
 
+    rankings(): Observable<any> {
+      const headers = new Headers();
+      headers.append('Authorization', 'JWT ' + this.token);
+      return this.http.get('/api/v1/ranking/all_total_usd_balances/', {headers: headers})
+            .map((response: Response) => response.json());
+    }
+
     protected _currencies: any;
 
     /**
-     * Observable of supported Currencies. 
+     * Observable of supported Currencies.
      * If called initially or refresh is true, an api call is issued.
      * Returns an object of type {SYM: {name: 'Currency', sym: 'SYM'}, ...}
      */
@@ -178,7 +185,7 @@ export class CoinsimService {
                 observer.complete();
               });
           });
-    
+
       }
 
       instant_order(source: string, dest:string, amount:number) {
@@ -189,7 +196,7 @@ export class CoinsimService {
                 'source_currency': source,
                 'dest_currency': dest,
                 'amount': amount
-                    
+
             }, {headers: headers})
             .map((response: Response) => response.json());
     }

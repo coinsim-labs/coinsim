@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { Routes,
      RouterModule } from '@angular/router';
 
-import { HistoryComponent } from './history.component';
+import { LeaderboardComponent } from './leaderboard.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HistoryComponent,
+    component: LeaderboardComponent,
     data: {
-      title: 'History'
+      title: 'Leaderboard'
     }
   }
 ];
@@ -19,4 +19,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 
-export class HistoryRoutingModule {}
+export class LeaderboardRoutingModule{}

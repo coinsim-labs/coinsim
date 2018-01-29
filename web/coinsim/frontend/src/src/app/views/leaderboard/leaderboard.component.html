@@ -1,0 +1,24 @@
+<div class="animated fadeIn">
+  <div class="card bg-white">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="thead">
+          <tr>
+            <th>Position</th>
+            <th>Name</th>
+            <th style="text-align:right;">Total USD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of rankings | async">
+          <td>{{user.pos}}</td>
+          <td>{{user.username}}</td>
+            <td style="text-align:right;">{{user.totalUSD | number : '1.2-2'}}</td>
+          </tr>
+        </tbody>
+    </table>
+    </div>
+  </div>
+  </div>
+</div>

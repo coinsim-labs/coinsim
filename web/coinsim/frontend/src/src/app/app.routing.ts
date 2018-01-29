@@ -50,6 +50,10 @@ export const routes: Routes = [
         path: 'trading',
         loadChildren: './views/trading/trading.module#TradingModule'
       },
+      {
+        path: 'leaderboard',
+        loadChildren: './views/leaderboard/leaderboard.module#LeaderboardModule'
+      },
     ]
   },
   {
@@ -70,7 +74,7 @@ export const routes: Routes = [
 @NgModule({
   imports: [ RouterModule.forRoot(routes) ],
   exports: [ RouterModule ],
-  declarations: [ 
+  declarations: [
     //MarketComponent
   ]
 })
