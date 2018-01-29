@@ -104,8 +104,8 @@
           <p>Choose Currencies to buy</p>
           <ul class="bank-list">
 
-            <li *ngFor="let item of model.bank.currencies" class="bank-item" 
-            [ngClass]="{'selected': item.selected, 'disabled': item.sym == selectedSellItem.currency}" 
+            <li *ngFor="let item of model.bank.currencies" class="bank-item"
+            [ngClass]="{'selected': item.selected, 'disabled': item.sym == selectedSellItem?.currency}"
             (click)="clickBuyObject($event.target, item)">
 
               <img src="assets/img/crypto-icons/{{item.sym | lowercase}}.png" alt="{{item.sym | lowercase}}-icon">
