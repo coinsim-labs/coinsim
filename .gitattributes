@@ -1,0 +1,3 @@
+web/coinsim/static/* linguist-vendored
+web/coinsim/frontend/dist/* linguist-vendored
+web/coinsim/frontend/src/src/scss/* linguist-vendored
