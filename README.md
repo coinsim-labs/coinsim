@@ -35,8 +35,10 @@ You can set it manually with `git config --global core.autocrlf false`
 		* Auswahl der Technologien
 			* Frontend: Angular2, Core UI als Template, Highstock/Highcharts für Graphen
 			* Backend: Django, PostgresSQL
-			* Für Authentifizierung JWTs
-			* Docker
+			* Für Livekurse – CryptoCompare API https://www.cryptocompare.com/api/
+			* Für Authentifizierung – JWTs https://www.jwt.io
+			* Für Container – Docker https://www.docker.com/
+			* Für Informationen zu Crypowährungen – CoinGecko https://www.coingecko.com/en
 		* Feature wurden dokumentiert und zugewiesen mit Trello Board
 		* (fast) wöchentliche Treffen um entstandene Fragen zu klären
 		* 2 kleine "Hackathons" gehostet Tim
