@@ -20,6 +20,32 @@ Make sure you clone the repo "as-is" and have git `core.autocrlf` set to `false`
 Otherwise you will get into problems because of Windows-style line endings.
 You can set it manually with `git config --global core.autocrlf false`
 
-### Who do I talk to? ###
-
+### Dokumentation ###
+* Angaben zum Team, Vorgehensweise:
+	* Team: Tim Schmittmann, Felix Cornelius, Thomas Bruhn
+	* Vorgehensweise:
+		* gemeinsame Ideenfindung
+		* Ausarbeitung der Anforderungen für Projekt
+			* Nutzer hat Startguthaben
+			* Nutzer kann Guthaben in Kryptowährungen umtauschen
+				* Kurse sollen von fremder API geholt werden
+			* Nutzer hat graphisch Ansprechende Übersicht zu:
+				* Kryptowährungen
+				* Eigenem Wallet
+		* Auswahl der Technologien
+			* Frontend: Angular2, Core UI als Template, Highstock/Highcharts für Graphen
+			* Backend: Django, PostgresSQL
+			* Für Authentifizierung JWTs
+			* Docker
+		* Feature wurden dokumentiert und zugewiesen mit Trello Board
+		* (fast) wöchentliche Treffen um entstandene Fragen zu klären
+		* 2 kleine "Hackathons" gehostet Tim
+	* Schnittstellenbeschreibung des Web Service (
+		* API documentation: http://localhost/api/v1/docs/
+    * Bedienungsanleitung für Clients
+		* Verweis auf "How do I get set up?" oben
+	* Feedback + Kritik am Praktikum
+		* Wir waren alle zufrieden mit dem Praktikum
+		* Es war schön sich seine eigene Aufgabe auszudenken und über verwendete Technologien entscheiden zu können
+		
 * Gruppe9 von SCC – Tim Schmittmann, Felix Cornelius, Thomas Bruhn
